@@ -22,16 +22,17 @@ void SYS_INIT(void)
     uart2_init(115200);
     uart3_init(115200);
 
-    Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
-		
-    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
-    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
-	  Sys_sPrintf(USART3,(unsigned char *)p,3);
+//    Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
+//		
+//    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
+//    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
+	  //Sys_sPrintf(USART3,(unsigned char *)p,3);
 	  Sys_sPrintf(USART1,(unsigned char *)p,3);
-	  Sys_sPrintf(USART2,(unsigned char *)p,3);
+	  //Sys_sPrintf(USART2,(unsigned char *)p,3);
+	  //Sys_sPrintf(USART1, USART_TX_BUF, sizeof(_ublox_cfg_tp));
+    USART_DMA_Enable(USART1, 3);  //通过dma发送出去
 
-    Sys_Printf(USART1, (char *)"\r\nPrintf_USART ok");
-USART_DMA_Enable(USART1,5);
+   // Sys_Printf(USART1, (char *)"\r\nPrintf_USART ok");
     delay_ms(500);
 }
 
