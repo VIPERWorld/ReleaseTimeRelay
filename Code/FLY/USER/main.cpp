@@ -39,6 +39,7 @@ int main(void)
     /***总循环***/
     while (1)
     {
+			
 //		Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
 //    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
 //    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
