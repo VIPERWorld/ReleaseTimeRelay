@@ -22,9 +22,9 @@ void SYS_INIT(void)
     uart2_init(115200);
     uart3_init(115200);
 
-    // Sys_Printf(USART1, "\r\nUSART1 ok");
-    // Sys_Printf(USART2, "\r\nUSART2 ok");
-    // Sys_Printf(USART3, "\r\nUSART3 ok");
+    Sys_Printf(USART1, "\r\nUSART1 ok");
+    Sys_Printf(USART2, "\r\nUSART2 ok");
+    Sys_Printf(USART3, "\r\nUSART3 ok");
 
     Sys_Printf(Printf_USART, (char *)"\r\nPrintf_USART ok");
 
