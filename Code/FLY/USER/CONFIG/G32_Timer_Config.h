@@ -57,6 +57,9 @@ TIM1_CH3N    |PB15(!36)|   PB1   |   PE12(100 144)   |
 #define TIM7_EN  0
 #define TIM8_EN  0
 
+#if ((TIM5_EN||TIM6_EN||TIM7_EN||TIM8_EN)&&(STM32F10X_MD||STM32F10X_LD))
+#error STM32F10X_MD AND STM32F10X_MD NOT HAVE TIM5678
+#endif
 /***PWM***/
 /****************************************/
 
