@@ -27,7 +27,7 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 #define AF_USART2_   (0)
 #define AF_USART3_   (0)
 #define EN_USART1_IQR_T  (1)       //Enable(1)/Disable(0)
-#define EN_USART1_IQR_R  (1)       //Enable(1)/Disable(0)
+#define EN_USART1_IQR_R  (0)       //Enable(1)/Disable(0)
 #define EN_USART2_IQR_T  (0)       //Enable(1)/Disable(0)
 #define EN_USART2_IQR_R  (0)       //Enable(1)/Disable(0)
 #define EN_USART3_IQR_T  (0)       //Enable(1)/Disable(0)
