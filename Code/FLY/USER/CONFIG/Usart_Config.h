@@ -19,9 +19,9 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 #define EN_USART_    (1)       //Enable(1)/Disable(0)
 #define EN_USART2_   (1)       //Enable(1)/Disable(0)
 #define EN_USART3_   (1)       //Enable(1)/Disable(0)
-#define EN_USART_RX   (1)       //使能（1）/禁止（0）串口1接收
-#define EN_USART2_RX  (1)       //使能（1）/禁止（0）串口2接收
-#define EN_USART3_RX  (1)       //使能（1）/禁止（0）串口3接收
+#define EN_USART_RX   (0)       //使能（1）/禁止（0）串口1接收
+#define EN_USART2_RX  (0)       //使能（1）/禁止（0）串口2接收
+#define EN_USART3_RX  (0)       //使能（1）/禁止（0）串口3接收
 
 #define AF_USART1_   (0)
 #define AF_USART2_   (0)
