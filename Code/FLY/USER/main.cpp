@@ -19,8 +19,8 @@ void SYS_INIT(void)
     /***中断初始化***/
     NVIC_Configuration();
     uart_init (115200);
-    uart2_init(115200);
-    uart3_init(115200);
+//    uart2_init(115200);
+//    uart3_init(115200);
 
 //    Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
 //		

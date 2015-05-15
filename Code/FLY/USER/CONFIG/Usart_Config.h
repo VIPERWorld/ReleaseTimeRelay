@@ -17,8 +17,8 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 //#define DEBUG_USART USART1
 
 #define EN_USART_    (1)       //Enable(1)/Disable(0)
-#define EN_USART2_   (1)       //Enable(1)/Disable(0)
-#define EN_USART3_   (1)       //Enable(1)/Disable(0)
+#define EN_USART2_   (0)       //Enable(1)/Disable(0)
+#define EN_USART3_   (0)       //Enable(1)/Disable(0)
 #define EN_USART_RX   (0)       //使能（1）/禁止（0）串口1接收
 #define EN_USART2_RX  (0)       //使能（1）/禁止（0）串口2接收
 #define EN_USART3_RX  (0)       //使能（1）/禁止（0）串口3接收
@@ -34,11 +34,11 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 #define EN_USART3_IQR_R  (0)       //Enable(1)/Disable(0)
 
 #define EN_USART1_DMA_T  (1)       //Enable(1)/Disable(0)
-#define EN_USART1_DMA_R  (1)       //Enable(1)/Disable(0)
-#define EN_USART2_DMA_T  (1)       //Enable(1)/Disable(0)
-#define EN_USART2_DMA_R  (1)       //Enable(1)/Disable(0)
-#define EN_USART3_DMA_T  (1)       //Enable(1)/Disable(0)
-#define EN_USART3_DMA_R  (1)       //Enable(1)/Disable(0)
+#define EN_USART1_DMA_R  (0)       //Enable(1)/Disable(0)
+#define EN_USART2_DMA_T  (0)       //Enable(1)/Disable(0)
+#define EN_USART2_DMA_R  (0)       //Enable(1)/Disable(0)
+#define EN_USART3_DMA_T  (0)       //Enable(1)/Disable(0)
+#define EN_USART3_DMA_R  (0)       //Enable(1)/Disable(0)
 
 /***USART***/
       //串口
