@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no" ?>
-<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_projx.xsd">
+<Project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="project_proj.xsd">
 
-  <SchemaVersion>2.1</SchemaVersion>
+  <SchemaVersion>1.1</SchemaVersion>
 
   <Header>### uVision Project, (C) Keil Software</Header>
 
@@ -14,14 +14,12 @@
         <TargetCommonOption>
           <Device>STM32F103VC</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32F1xx_DFP.1.1.0</PackID>
-          <PackURL>http://www.keil.com/pack/</PackURL>
-          <Cpu>IROM(0x08000000,0x40000) IRAM(0x20000000,0xC000) CPUTYPE("Cortex-M3") CLOCK(12000000) ELITTLE</Cpu>
+          <Cpu>IRAM(0x20000000-0x2000BFFF) IROM(0x8000000-0x803FFFF) CLOCK(8000000) CPUTYPE("Cortex-M3")</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
-          <StartupFile></StartupFile>
-          <FlashDriverDll>UL2CM3(-S0 -C0 -P0 -FD20000000 -FC1000 -FN1 -FF0STM32F10x_512 -FS08000000 -FL080000 -FP0($$Device:STM32F103VC$Flash\STM32F10x_512.FLM))</FlashDriverDll>
-          <DeviceId>0</DeviceId>
-          <RegisterFile>$$Device:STM32F103VC$Device\Include\stm32f10x.h</RegisterFile>
+          <StartupFile>"STARTUP\ST\STM32F10x\startup_stm32f10x_hd.s" ("STM32 High Density Line Startup Code")</StartupFile>
+          <FlashDriverDll>UL2CM3(-O14 -S0 -C0 -N00("ARM Cortex-M3") -D00(1BA00477) -L00(4) -FO7 -FD20000000 -FC800 -FN1 -FF0STM32F10x_512 -FS08000000 -FL040000)</FlashDriverDll>
+          <DeviceId>4226</DeviceId>
+          <RegisterFile>stm32f10x.h</RegisterFile>
           <MemoryEnv></MemoryEnv>
           <Cmp></Cmp>
           <Asm></Asm>
@@ -31,14 +29,14 @@
           <SLE66CMisc></SLE66CMisc>
           <SLE66AMisc></SLE66AMisc>
           <SLE66LinkerMisc></SLE66LinkerMisc>
-          <SFDFile>$$Device:STM32F103VC$SVD\STM32F103xx.svd</SFDFile>
+          <SFDFile>SFD\ST\STM32F1xx\STM32F103xx.sfr</SFDFile>
           <bCustSvd>0</bCustSvd>
           <UseEnv>0</UseEnv>
           <BinPath></BinPath>
           <IncludePath></IncludePath>
           <LibPath></LibPath>
-          <RegisterFilePath></RegisterFilePath>
-          <DBRegisterFilePath></DBRegisterFilePath>
+          <RegisterFilePath>ST\STM32F10x\</RegisterFilePath>
+          <DBRegisterFilePath>ST\STM32F10x\</DBRegisterFilePath>
           <TargetStatus>
             <Error>0</Error>
             <ExitCodeStop>0</ExitCodeStop>
@@ -74,8 +72,6 @@
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
-            <nStopB1X>0</nStopB1X>
-            <nStopB2X>0</nStopB2X>
           </BeforeMake>
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
@@ -106,7 +102,7 @@
         </CommonProperty>
         <DllOption>
           <SimDllName>SARMCM3.DLL</SimDllName>
-          <SimDllArguments> -REMAP</SimDllArguments>
+          <SimDllArguments>-REMAP</SimDllArguments>
           <SimDlgDll>DCM.DLL</SimDlgDll>
           <SimDlgDllArguments>-pCM3</SimDlgDllArguments>
           <TargetDllName>SARMCM3.DLL</TargetDllName>
@@ -132,7 +128,6 @@
             <RestoreFunctions>1</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <LimitSpeedToRealTime>0</LimitSpeedToRealTime>
-            <RestoreSysVw>1</RestoreSysVw>
           </Simulator>
           <Target>
             <UseTarget>1</UseTarget>
@@ -144,7 +139,8 @@
             <RestoreFunctions>0</RestoreFunctions>
             <RestoreToolbox>1</RestoreToolbox>
             <RestoreTracepoints>1</RestoreTracepoints>
-            <RestoreSysVw>1</RestoreSysVw>
+            <RestoreTracepoints>1</RestoreTracepoints>
+            <RestoreTracepoints>1</RestoreTracepoints>
           </Target>
           <RunDebugAfterBuild>0</RunDebugAfterBuild>
           <TargetSelection>6</TargetSelection>
@@ -444,6 +440,11 @@
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_bkp.c</FilePath>
             </File>
             <File>
+              <FileName>stm32f10x_can.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_can.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f10x_cec.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_cec.c</FilePath>
@@ -452,6 +453,11 @@
               <FileName>stm32f10x_crc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_crc.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_dac.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_dac.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_dbgmcu.c</FileName>
@@ -472,6 +478,11 @@
               <FileName>stm32f10x_flash.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_flash.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_fsmc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_fsmc.c</FilePath>
             </File>
             <File>
               <FileName>stm32f10x_gpio.c</FileName>
@@ -504,6 +515,16 @@
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_rtc.c</FilePath>
             </File>
             <File>
+              <FileName>stm32f10x_sdio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_sdio.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_spi.c</FilePath>
+            </File>
+            <File>
               <FileName>stm32f10x_tim.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_tim.c</FilePath>
@@ -512,6 +533,11 @@
               <FileName>stm32f10x_usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>stm32f10x_wwdg.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\STM32F10x_StdPeriph_Driver\src\stm32f10x_wwdg.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -547,6 +573,46 @@
               <FileName>loop_fast.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\USER\TASK\loop_fast.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_6050.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_6050.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_bmp085.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_bmp085.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_cap_rc.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_cap_rc.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_hmc5883l.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_hmc5883l.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_pwm_ex.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_pwm_ex.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_ultrasonic.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_ultrasonic.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_led.h</FilePath>
+            </File>
+            <File>
+              <FileName>task_bmp085.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\USER\TASK\task_bmp085.cpp</FilePath>
             </File>
           </Files>
         </Group>
@@ -589,14 +655,34 @@
           <GroupName>HARDWARE</GroupName>
           <Files>
             <File>
+              <FileName>G32_I2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\G32_I2c.c</FilePath>
+            </File>
+            <File>
               <FileName>G32_Timer.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\HARDWARE\G32_Timer.c</FilePath>
             </File>
             <File>
+              <FileName>G32_Timer_Cap.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\G32_Timer_Cap.c</FilePath>
+            </File>
+            <File>
               <FileName>gpio.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\HARDWARE\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>pwm.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\pwm.c</FilePath>
+            </File>
+            <File>
+              <FileName>spi.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\spi.c</FilePath>
             </File>
             <File>
               <FileName>stmflash.c</FileName>
@@ -607,6 +693,11 @@
               <FileName>bkp.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\HARDWARE\bkp.c</FilePath>
+            </File>
+            <File>
+              <FileName>G32_HI2c.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\G32_HI2c.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -622,6 +713,36 @@
         </Group>
         <Group>
           <GroupName>PERIPHERAL</GroupName>
+          <Files>
+            <File>
+              <FileName>MPU6050.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\PERIPHERAL\MPU6050\MPU6050.c</FilePath>
+            </File>
+            <File>
+              <FileName>G32_Nrf24l01.C</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\PERIPHERAL\NRF24L01\G32_Nrf24l01.C</FilePath>
+            </File>
+            <File>
+              <FileName>ultrasonic.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\PERIPHERAL\ULTRASONIC\ultrasonic.c</FilePath>
+            </File>
+            <File>
+              <FileName>hmc5883l.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\PERIPHERAL\HMC5883L\hmc5883l.c</FilePath>
+            </File>
+            <File>
+              <FileName>bmp085.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\PERIPHERAL\BMP085\bmp085.c</FilePath>
+            </File>
+          </Files>
+        </Group>
+        <Group>
+          <GroupName>FATFS</GroupName>
         </Group>
         <Group>
           <GroupName>COMMUNICATION</GroupName>
@@ -642,9 +763,29 @@
           <GroupName>ALGORITHM</GroupName>
           <Files>
             <File>
+              <FileName>IMU.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USER\APP\IMU.c</FilePath>
+            </File>
+            <File>
               <FileName>filter.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\USER\APP\filter.c</FilePath>
+            </File>
+            <File>
+              <FileName>Control.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USER\APP\Control.c</FilePath>
+            </File>
+            <File>
+              <FileName>motor.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\USER\APP\motor.c</FilePath>
+            </File>
+            <File>
+              <FileName>Balance.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\USER\APP\Balance.cpp</FilePath>
             </File>
             <File>
               <FileName>pfilter.c</FileName>
