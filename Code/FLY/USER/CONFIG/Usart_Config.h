@@ -33,12 +33,12 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 #define EN_USART3_IQR_T  (1)       //Enable(1)/Disable(0)
 #define EN_USART3_IQR_R  (1)       //Enable(1)/Disable(0)
 
-#define EN_USART1_DMA_T  (0)       //Enable(1)/Disable(0)
-#define EN_USART1_DMA_R  (0)       //Enable(1)/Disable(0)
-#define EN_USART2_DMA_T  (0)       //Enable(1)/Disable(0)
-#define EN_USART2_DMA_R  (0)       //Enable(1)/Disable(0)
-#define EN_USART3_DMA_T  (0)       //Enable(1)/Disable(0)
-#define EN_USART3_DMA_R  (0)       //Enable(1)/Disable(0)
+#define EN_USART1_DMA_T  (1)       //Enable(1)/Disable(0)
+#define EN_USART1_DMA_R  (1)       //Enable(1)/Disable(0)
+#define EN_USART2_DMA_T  (1)       //Enable(1)/Disable(0)
+#define EN_USART2_DMA_R  (1)       //Enable(1)/Disable(0)
+#define EN_USART3_DMA_T  (1)       //Enable(1)/Disable(0)
+#define EN_USART3_DMA_R  (1)       //Enable(1)/Disable(0)
 
 /***USART***/
       //串口

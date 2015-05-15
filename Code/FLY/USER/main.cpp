@@ -44,7 +44,5 @@ int main(void)
 //    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
 //    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
 			delay_ms(50);
-
-
     }
 }
