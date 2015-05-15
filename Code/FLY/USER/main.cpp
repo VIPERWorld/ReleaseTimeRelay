@@ -30,7 +30,7 @@ void SYS_INIT(void)
 	  Sys_sPrintf(USART1,(unsigned char *)p,3);
 	  //Sys_sPrintf(USART2,(unsigned char *)p,3);
 	  //Sys_sPrintf(USART1, USART_TX_BUF, sizeof(_ublox_cfg_tp));
-    USART_DMA_Enable(USART1, 3);  //通过dma发送出去
+    //USART_DMA_Enable(USART1, 3);  //通过dma发送出去
 
    // Sys_Printf(USART1, (char *)"\r\nPrintf_USART ok");
     delay_ms(500);
