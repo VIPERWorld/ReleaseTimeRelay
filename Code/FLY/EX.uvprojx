@@ -558,6 +558,11 @@
               <FileType>5</FileType>
               <FilePath>.\USER\TASK\loop_fast.h</FilePath>
             </File>
+            <File>
+              <FileName>TaskEx.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\TaskEx.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
