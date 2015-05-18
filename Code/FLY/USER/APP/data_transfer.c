@@ -34,7 +34,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
 {
     vs16 rc_value_temp;
     u8 sum = 0;
-    //Sys_sPrintf(Printf_USART, data_buf, num);
+ Sys_sPrintf(Printf_USART, data_buf, num);
     for (u8 i = 0; i < (num - 1); i++)
         sum += *(data_buf + i);
 #if   SUM_CHECK_HOLD
