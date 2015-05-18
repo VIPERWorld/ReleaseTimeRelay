@@ -43,7 +43,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     if (!(*(data_buf) == 0xAA && *(data_buf + 1) == 0xAF))     return; //
     if (*(data_buf + 2) == 0X10)                        //PID1
     {
-        AbsoluteOpticalEncoder_VAL = *(data_buf + 3);
+        AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
     }
     Ex_Anl();
 }
