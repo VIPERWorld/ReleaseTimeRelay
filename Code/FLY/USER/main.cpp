@@ -34,12 +34,12 @@ int main(void)
     /***总循环***/
     while (1)
     {
-        Sys_Printf(USART1, (char *)"\r\nd okes");
-        Sys_Printf(USART2, (char *)"\r\nRToke");
-        Sys_Printf(USART3, (char *)"\r\nUSA3 ");
-        Sys_Printf(USART1, (char *)"\r\nRT1");
-        Sys_Printf(USART2, (char *)"\r\nT2");
-        Sys_Printf(USART3, (char *)"\r\n3");
+        Sys_Printf(USART1, (char *)"nd okes");
+        Sys_Printf(USART2, (char *)"nRToke");
+        Sys_Printf(USART3, (char *)"nUSA3 ");
+        Sys_Printf(USART1, (char *)"nRT1");
+        Sys_Printf(USART2, (char *)"nT2");
+        Sys_Printf(USART3, (char *)"n3");
 
         delay_us(100);
     }
