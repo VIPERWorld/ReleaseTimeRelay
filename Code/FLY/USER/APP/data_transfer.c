@@ -7,8 +7,11 @@
 #define SUM_CHECK_HOLD 0//1 OPEN 0 CLOSE
 void Data_Send_Check(u16 check);
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
-u16 AbsoluteOpticalEncoder_VAL = 0;
-u8 RelayStata;
+
+u16 AbsoluteOpticalEncoder_VAL = 0;//绝对是光电编码器
+u8 RelayStata;//继电器状态
+u8 TimeUnlock;//时间锁
+
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
     30, 60, 90, 120,
@@ -41,19 +44,24 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     if (!(sum == *(data_buf + num - 1)))       return; //sum
 #endif
     if (!(*(data_buf) == 0xAA && *(data_buf + 1) == 0xAF))     return; //
-    if (*(data_buf + 2) == 0X10)                        //PID1
+    if (*(data_buf + 2) == 0X10)                        //
     {
         AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
-			Ex_Anl();
+				Ex_Anl();
     }
-		if (*(data_buf + 2) == 0X11)                        //PID1
+		if (*(data_buf + 2) == 0X11)                        //
     {
-			//if((*(data_buf + 4)<8)&&(*(data_buf + 4)>0))
+			if(*(data_buf + 4)<8)
         AbsoluteOpticalEncoder_Apart[*(data_buf + 4)] = *(data_buf + 5);
 			Sys_Printf(Printf_USART, "\r\nAbsoluteOpticalEncoder_Apart:\r\n");
 			for(int i=0;i<8;i++)Sys_Printf(Printf_USART, " %d",AbsoluteOpticalEncoder_Apart[i]);
     }
-    
+		if (*(data_buf + 2) == 0X12)                        //
+    {
+      TimeUnlock = *(data_buf + 4);
+			Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d",TimeUnlock);
+    }
+		
 }
 
 void Data_Exchange(void)
