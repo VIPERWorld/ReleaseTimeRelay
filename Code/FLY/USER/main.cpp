@@ -41,14 +41,14 @@ void SYS_INIT(void)
         //aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
 
 				Sys_Printf(USART1, (char *)"\r\n");
-        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)" %X", dat[i]);
+        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
         
 				memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock)); //这里要重新初始化清空
         aesDecInit();//在执行解密初始化之前可以为AES_Key_Table赋值有效的密码数据
         aesDecrypt(dat, chainCipherBlock);//AES解密，密文数据存放在dat里面，经解密就能得到之前的明文。
 
 				Sys_Printf(USART1, (char *)"\r\n");
-        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)" %X", dat[i]);
+        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
 
     }
     delay_ms(500);

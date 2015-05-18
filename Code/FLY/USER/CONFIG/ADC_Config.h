@@ -25,6 +25,7 @@
 | Channel16 | 温度传感器  |           |            |
 | Channel17 | 内部参考电压|           |            |
 |***************************************************/
+//是否使能DMA
 #define ADC1_DMA 1
 #define ADC1_DMAIRQ_ENABLE 0
 #define ADC1_Channel00ON ((1<<5)+0)
@@ -36,15 +37,21 @@
 #define ADC1_Channel06ON ((0<<5)+0)
 #define ADC1_Channel07ON ((0<<5)+0)
 #define ADC1_Channel08ON ((0<<5)+0)
-#define ADC1_Channel09ON ((1<<5)+1)
+#define ADC1_Channel09ON ((0<<5)+0)
 #define ADC1_Channel10ON ((0<<5)+0)
 #define ADC1_Channel11ON ((0<<5)+0)
 #define ADC1_Channel12ON ((0<<5)+0)
 #define ADC1_Channel13ON ((0<<5)+0)
-#define ADC1_Channel14ON ((1<<5)+2)
+#define ADC1_Channel14ON ((1<<5)+0)
 #define ADC1_Channel15ON ((0<<5)+0)
 #define ADC1_Channel16ON ((0<<5)+0)
 #define ADC1_Channel17ON ((0<<5)+0)
+/*
+ADC1_ChannelxON ((y<<5)+z)
+x:通道数
+y:是否使能 1使能 0 不使能
+z:顺序 0-18
+*/
 /***ADC***/
 /****************************************/
 
