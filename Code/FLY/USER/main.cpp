@@ -25,7 +25,7 @@ void SYS_INIT(void)
  ChipUniqueID[2] = *(__IO u32*)(0X1FFFF7E8);  // 低字节
  ChipUniqueID[1] = *(__IO u32 *)(0X1FFFF7EC); // 
  ChipUniqueID[0] = *(__IO u32 *)(0X1FFFF7F0); // 高字节
-    Sys_Printf(USART1, (char *)"\r\n%d %d %d",ChipUniqueID[0],ChipUniqueID[1],ChipUniqueID[2]);
+	Sys_Printf(USART1, (char *)"ChipUniqueID: %d %d %d",ChipUniqueID[0],ChipUniqueID[1],ChipUniqueID[2]);
     Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
     Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
     delay_ms(500);
