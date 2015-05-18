@@ -73,6 +73,7 @@ int main(void)
         //        Sys_Printf(USART3, (char *)"n3");
         //        Sys_Printf(USART1, (char *)"\r\n");
 									Sys_Printf(USART1, (char *)"\r\n%d %d %d",ADC_ConvertedValue[0],ADC_ConvertedValue[1],ADC_ConvertedValue[2]);
-        delay_ms(100);
+      ADC_SoftwareStartConvCmd(ADC1, ENABLE);  
+			delay_ms(100);
     }
 }
