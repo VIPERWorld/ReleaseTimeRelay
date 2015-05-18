@@ -74,7 +74,7 @@ int main(void)
         //        Sys_Printf(USART1, (char *)"\r\n");
 			for(int i=0;i<32;++i)
 			{
-				Sys_Printf(USART1, (char *)"\r\n%d %d",(s32)(143-ADC_ConvertedValue[0])*10000/43+2500,ADC_ConvertedValue[0]);
+				Sys_Printf(USART1, (char *)"\r\n%d %d",(s32)(143-ADC_ConvertedValue[0]*330/4096)*10000/43+2500,ADC_ConvertedValue[0]);
       ADC_SoftwareStartConvCmd(ADC1, ENABLE);  
 			delay_ms(100);
 			}
