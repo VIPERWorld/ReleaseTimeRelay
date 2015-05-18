@@ -26,6 +26,11 @@
 | Channel17 | 内部参考电压|           |            |
 |***************************************************/
 //是否使能DMA
+/*
+ex.
+	ADC1_Init();
+	
+*/
 #define ADC1_DMA 1
 #define ADC1_DMAIRQ_ENABLE 0
 #define ADC1_Channel00ON ((1<<5)+0)

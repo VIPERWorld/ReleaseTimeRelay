@@ -12,6 +12,8 @@
 #include "string.h"
 /***Other***/
 #include "aes.h"
+#include "adc.h"
+
 const char *p = "sdf";
 void SYS_INIT(void)
 {
@@ -51,6 +53,9 @@ void SYS_INIT(void)
         for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
 
     }
+		{
+		ADC1_Init();
+		}
     delay_ms(500);
 }
 
@@ -67,7 +72,7 @@ int main(void)
         //        Sys_Printf(USART2, (char *)"nT2");
         //        Sys_Printf(USART3, (char *)"n3");
         //        Sys_Printf(USART1, (char *)"\r\n");
-
+Sys_Printf(USART1, (char *)"\r\n%d",ADC_ConvertedValue[0]);
         delay_ms(100);
     }
 }
