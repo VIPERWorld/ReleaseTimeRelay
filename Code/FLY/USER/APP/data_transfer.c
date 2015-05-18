@@ -44,6 +44,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     if (*(data_buf + 2) == 0X10)                        //PID1
     {
         AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
+			Ex_Anl();
     }
 		if (*(data_buf + 2) == 0X11)                        //PID1
     {
@@ -52,7 +53,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
 			Sys_Printf(Printf_USART, "\r\nAbsoluteOpticalEncoder_Apart:\r\n");
 			for(int i=0;i<8;i++)Sys_Printf(Printf_USART, " %d",AbsoluteOpticalEncoder_Apart[i]);
     }
-    Ex_Anl();
+    
 }
 
 void Data_Exchange(void)
