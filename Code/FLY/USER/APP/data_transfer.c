@@ -61,7 +61,6 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
       TimeUnlock = *(data_buf + 4);
 			Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d",TimeUnlock);
     }
-		
 }
 
 void Data_Exchange(void)

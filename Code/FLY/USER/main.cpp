@@ -21,8 +21,11 @@ void SYS_INIT(void)
     uart_init (115200);
     uart2_init(115200);
     uart3_init(115200);
-
-    Sys_Printf(USART1, (char *)"\r\nUSART1 okswerf");
+  u32 ChipUniqueID[3];
+ ChipUniqueID[2] = *(__IO u32*)(0X1FFFF7E8);  // 低字节
+ ChipUniqueID[1] = *(__IO u32 *)(0X1FFFF7EC); // 
+ ChipUniqueID[0] = *(__IO u32 *)(0X1FFFF7F0); // 高字节
+    Sys_Printf(USART1, (char *)"\r\n%d %d %d",ChipUniqueID[0],ChipUniqueID[1],ChipUniqueID[2]);
     Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
     Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
     delay_ms(500);
