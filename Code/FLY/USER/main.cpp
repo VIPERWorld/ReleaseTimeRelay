@@ -43,7 +43,7 @@ void SYS_INIT(void)
 	aesEncrypt(dat, chainCipherBlock);//AES加密，数组dat里面的新内容就是加密后的数据。
 	//aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
 
-for(int i=0;i<16;++i)	Sys_Printf(USART1,(char *)" %d",dat[i]);
+for(int i=0;i<16;++i)	Sys_Printf(USART1,(char *)" %X",dat[i]);
 	}
     delay_ms(500);
 }
