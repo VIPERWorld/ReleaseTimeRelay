@@ -34,7 +34,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
 {
     vs16 rc_value_temp;
     u8 sum = 0;
- Sys_sPrintf(Printf_USART, data_buf, num);
+    Sys_sPrintf(Printf_USART, data_buf, num);
     for (u8 i = 0; i < (num - 1); i++)
         sum += *(data_buf + i);
 #if   SUM_CHECK_HOLD
@@ -47,6 +47,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     }
 		if (*(data_buf + 2) == 0X11)                        //PID1
     {
+			if((*(data_buf + 4)<8)&&(*(data_buf + 4)>0))
         AbsoluteOpticalEncoder_Apart[*(data_buf + 4)] = *(data_buf + 5);
     }
     Ex_Anl();
