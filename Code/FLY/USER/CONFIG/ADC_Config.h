@@ -34,7 +34,7 @@ ex.
 #define ADC1_DMA 1
 #define ADC1_DMAIRQ_ENABLE 0
 #define ADC1_Channel00ON ((1<<5)+0)
-#define ADC1_Channel01ON ((0<<5)+0)
+#define ADC1_Channel01ON ((1<<5)+2)
 #define ADC1_Channel02ON ((0<<5)+0)
 #define ADC1_Channel03ON ((0<<5)+0)
 #define ADC1_Channel04ON ((0<<5)+0)
@@ -47,7 +47,7 @@ ex.
 #define ADC1_Channel11ON ((0<<5)+0)
 #define ADC1_Channel12ON ((0<<5)+0)
 #define ADC1_Channel13ON ((0<<5)+0)
-#define ADC1_Channel14ON ((1<<5)+2)
+#define ADC1_Channel14ON ((0<<5)+0)
 #define ADC1_Channel15ON ((0<<5)+0)
 #define ADC1_Channel16ON ((0<<5)+0)
 #define ADC1_Channel17ON ((0<<5)+0)
