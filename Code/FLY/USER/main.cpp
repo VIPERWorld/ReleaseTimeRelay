@@ -44,6 +44,6 @@ int main(void)
     Sys_Printf(USART2, (char *)"\r\nT2");
     Sys_Printf(USART3, (char *)"\r\n3");
 			
-	  delay_us(20);
+	  delay_us(200);
     }
 }
