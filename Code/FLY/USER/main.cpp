@@ -25,11 +25,9 @@ void SYS_INIT(void)
     Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
     Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
     Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
-	  Sys_sPrintf(USART3,(unsigned char *)p,3);
-	  Sys_sPrintf(USART1,(unsigned char *)p,3);
-	  Sys_sPrintf(USART2,(unsigned char *)p,3);
-
-   // Sys_Printf(USART1, (char *)"\r\nPrintf_USART ok");
+//	  Sys_sPrintf(USART3,(unsigned char *)p,3);
+//	  Sys_sPrintf(USART1,(unsigned char *)p,3);
+//	  Sys_sPrintf(USART2,(unsigned char *)p,3);
     delay_ms(500);
 }
 
@@ -39,10 +37,9 @@ int main(void)
     /***总循环***/
     while (1)
     {
-			
-//		Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
-//    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
-//    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
-			delay_ms(50);
+		Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
+    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
+    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
+	  delay_ms(50);
     }
 }
