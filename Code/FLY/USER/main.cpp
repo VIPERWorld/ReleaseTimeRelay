@@ -30,18 +30,20 @@ void SYS_INIT(void)
     Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
     Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
 	{
-		unsigned char dat[17]="0123456789ABCDEF";
+	unsigned char dat[17]={"0123456789ABCDEF"};
 	unsigned char chainCipherBlock[16];
     unsigned char i;
 	for(i=0;i<32;i++) AES_Key_Table[i]=i;//做运算之前先要设置好密钥，这里只是设置密钥的DEMO。
 
 
-//	memset(chainCipherBlock,0x00,sizeof(chainCipherBlock));
+	memset(chainCipherBlock,0x00,sizeof(chainCipherBlock));
 
-//	aesEncInit();//在执行加密初始化之前可以为AES_Key_Table赋值有效的密码数据
+	aesEncInit();//在执行加密初始化之前可以为AES_Key_Table赋值有效的密码数据
 
-//	aesEncrypt(dat, chainCipherBlock);//AES加密，数组dat里面的新内容就是加密后的数据。
-//	//aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
+	aesEncrypt(dat, chainCipherBlock);//AES加密，数组dat里面的新内容就是加密后的数据。
+	//aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
+
+
 	}
     delay_ms(500);
 }
