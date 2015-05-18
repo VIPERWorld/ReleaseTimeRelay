@@ -40,6 +40,7 @@ int main(void)
         Sys_Printf(USART1, (char *)"nRT1");
         Sys_Printf(USART2, (char *)"nT2");
         Sys_Printf(USART3, (char *)"n3");
+        Sys_Printf(USART1, (char *)"\r\n");
 
         delay_us(100);
     }
