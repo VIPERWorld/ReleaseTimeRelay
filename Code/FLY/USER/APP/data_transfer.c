@@ -45,6 +45,10 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     {
         AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
     }
+		if (*(data_buf + 2) == 0X11)                        //PID1
+    {
+        AbsoluteOpticalEncoder_Apart[*(data_buf + 4)] = *(data_buf + 5);
+    }
     Ex_Anl();
 }
 
