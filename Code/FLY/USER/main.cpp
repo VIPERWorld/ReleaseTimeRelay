@@ -72,7 +72,7 @@ int main(void)
         //        Sys_Printf(USART2, (char *)"nT2");
         //        Sys_Printf(USART3, (char *)"n3");
         //        Sys_Printf(USART1, (char *)"\r\n");
-									Sys_Printf(USART1, (char *)"\r\n%d",ADC_ConvertedValue[0]);
+									Sys_Printf(USART1, (char *)"\r\n%d %d %d",ADC_ConvertedValue[0],ADC_ConvertedValue[1],ADC_ConvertedValue[2]);
         delay_ms(100);
     }
 }
