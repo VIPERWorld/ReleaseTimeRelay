@@ -4,15 +4,15 @@
 #include "bak.h"
 
 #define DATA_TRANSFER_USE_USART
-#define SUM_CHECK_HOLD 1//1 OPEN 0 CLOSE
+#define SUM_CHECK_HOLD 0//1 OPEN 0 CLOSE
 void Data_Send_Check(u16 check);
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
-u16 AbsoluteOpticalEncoder_VAL=0;
+u16 AbsoluteOpticalEncoder_VAL = 0;
 u8 RelayStata;
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
     30, 60, 90, 120,
-    150,180,210,360
+    150, 180, 210, 360
 };
 
 
@@ -58,4 +58,3 @@ void Data_Exchange(void)
 #endif
 }
 
-	
