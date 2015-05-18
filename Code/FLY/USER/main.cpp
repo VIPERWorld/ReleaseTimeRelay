@@ -22,9 +22,9 @@ void SYS_INIT(void)
     uart2_init(115200);
     uart3_init(115200);
 
-    Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
-    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
-    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
+    Sys_Printf(USART1, (char *)"\r\nUSART1 okswerf");
+    Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
+    Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
 //	  Sys_sPrintf(USART3,(unsigned char *)p,3);
 //	  Sys_sPrintf(USART1,(unsigned char *)p,3);
 //	  Sys_sPrintf(USART2,(unsigned char *)p,3);
@@ -37,9 +37,13 @@ int main(void)
     /***总循环***/
     while (1)
     {
-		Sys_Printf(USART1, (char *)"\r\nUSART1 ok");
-    Sys_Printf(USART2, (char *)"\r\nUSART2 ok");
-    Sys_Printf(USART3, (char *)"\r\nUSART3 ok");
+		Sys_Printf(USART1, (char *)"\r\nd okes");
+    Sys_Printf(USART2, (char *)"\r\nRToke");
+    Sys_Printf(USART3, (char *)"\r\nUSA3 ");
+		Sys_Printf(USART1, (char *)"\r\nRT1");
+    Sys_Printf(USART2, (char *)"\r\nT2");
+    Sys_Printf(USART3, (char *)"\r\n3");
+			
 	  delay_ms(50);
     }
 }
