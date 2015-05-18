@@ -30,7 +30,7 @@ void SYS_INIT(void)
     Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
     Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
 	{
-	unsigned char dat[17]={"0123456789ABCDEF"};
+	unsigned char dat[16]={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
 	unsigned char chainCipherBlock[16];
     unsigned char i;
 	for(i=0;i<32;i++) AES_Key_Table[i]=i;//做运算之前先要设置好密钥，这里只是设置密钥的DEMO。
@@ -43,7 +43,7 @@ void SYS_INIT(void)
 	aesEncrypt(dat, chainCipherBlock);//AES加密，数组dat里面的新内容就是加密后的数据。
 	//aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
 
-
+for(int i=0;i<16;++i)	Sys_Printf(USART1,(char *)" %d",dat[i]);
 	}
     delay_ms(500);
 }
