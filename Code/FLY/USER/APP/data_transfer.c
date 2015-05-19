@@ -13,7 +13,7 @@
 #define DATA_TRANSFER_USE_USART
 #define SUM_CHECK_HOLD 0//1 OPEN 0 CLOSE
 /*Static Fun*/
-static void Data_Send_Check(u16 check);
+//static void Data_Send_Check(u16 check);
 /*Variable*/
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
