@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\GLIB\SYSTEM;..\GLIB\HARDWARE;..\GLIB\STM32F10x_StdPeriph_Driver\inc;.\USER;..\GLIB\CMSIS\CM3\CoreSupport;.\USER\APP;..\GLIB\PERIPHERAL\LCD\lcd12864;..\GLIB\PERIPHERAL\DHT11;..\GLIB\PERIPHERAL\SD;..\GLIB\FATFS\src;..\GLIB\FATFS\exfuns;..\GLIB\PERIPHERAL\LCD;..\GLIB\PERIPHERAL\DS18B20;.\USER\CONFIG;..\GLIB\PERIPHERAL\ULTRASONIC;..\GLIB\PERIPHERAL\HMC5883L;..\GLIB\PERIPHERAL\MPU6050;.\USER\APP\Kalman_Fliter</IncludePath>
+              <IncludePath>..\GLIB\SYSTEM;..\GLIB\HARDWARE;..\GLIB\STM32F10x_StdPeriph_Driver\inc;.\USER;..\GLIB\CMSIS\CM3\CoreSupport;.\USER\APP;..\GLIB\PERIPHERAL\LCD\lcd12864;..\GLIB\PERIPHERAL\DHT11;..\GLIB\PERIPHERAL\SD;..\GLIB\FATFS\src;..\GLIB\FATFS\exfuns;..\GLIB\PERIPHERAL\LCD;..\GLIB\PERIPHERAL\DS18B20;.\USER\CONFIG;..\GLIB\PERIPHERAL\ULTRASONIC;..\GLIB\PERIPHERAL\HMC5883L;..\GLIB\PERIPHERAL\MPU6050;.\USER\APP\Kalman_Fliter;..\GLIB\ALGORITHM\aes_rc6_rsa_tea_sha1_sha256_md5\AES</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -548,6 +548,11 @@
               <FileType>5</FileType>
               <FilePath>.\USER\CONFIG\G32_Timer_Config.h</FilePath>
             </File>
+            <File>
+              <FileName>ADC_Config.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\CONFIG\ADC_Config.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -623,6 +628,11 @@
               <FileType>1</FileType>
               <FilePath>..\GLIB\HARDWARE\bkp.c</FilePath>
             </File>
+            <File>
+              <FileName>adc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\adc.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -665,6 +675,11 @@
               <FileName>pfilter.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\USER\APP\pfilter.c</FilePath>
+            </File>
+            <File>
+              <FileName>AES.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\ALGORITHM\aes_rc6_rsa_tea_sha1_sha256_md5\AES\AES.c</FilePath>
             </File>
           </Files>
         </Group>
