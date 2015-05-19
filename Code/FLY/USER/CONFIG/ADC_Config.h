@@ -49,7 +49,7 @@ ex.
 #define ADC1_Channel13ON ((0<<5)+0)
 #define ADC1_Channel14ON ((0<<5)+0)
 #define ADC1_Channel15ON ((0<<5)+0)
-#define ADC1_Channel16ON ((1<<5)+1)
+#define ADC1_Channel16ON ((0<<5)+0)
 #define ADC1_Channel17ON ((0<<5)+0)
 /*
 ADC1_ChannelxON ((y<<5)+z)

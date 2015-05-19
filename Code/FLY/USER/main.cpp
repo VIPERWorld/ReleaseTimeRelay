@@ -62,7 +62,6 @@ void SYS_INIT(void)
 		int RandomSeed=ADC_ConvertedValue[0];
 		}
 		{
-		srand(1);
 			
 		}
     delay_ms(500);
@@ -82,8 +81,8 @@ int main(void)
         //        Sys_Printf(USART3, (char *)"n3");
         //        Sys_Printf(USART1, (char *)"\r\n");
 			for(int i=0;i<32;++i)
-			{
-				Sys_Printf(USART1, (char *)"\r\n%f %d %d",(1.42 - ADC_ConvertedValue[0]*3.3/4096)*1000/4.35 + 25,ADC_ConvertedValue[0],ADC_ConvertedValue[1]);
+			{	srand(ADC_ConvertedValue[0]);
+				Sys_Printf(USART1, (char *)"\r\n%d",rand());
 				ADC_SoftwareStartConvCmd(ADC1, ENABLE);
 				delay_ms(100);
 			}
