@@ -80,11 +80,14 @@ int main(void)
         //        Sys_Printf(USART2, (char *)"nT2");
         //        Sys_Printf(USART3, (char *)"n3");
         //        Sys_Printf(USART1, (char *)"\r\n");
-			for(int i=0;i<32;++i)
-			{	srand(ADC_ConvertedValue[0]);
-				Sys_Printf(USART1, (char *)"\r\n%d",rand());
-				ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-				delay_ms(100);
-			}
+//			for(int i=0;i<32;++i)
+//			{	
+//				
+//				ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+//				delay_ms(100);
+//			}
+			srand(SysTick_Clock());
+			Sys_Printf(USART1, (char *)"\r\n%d",rand());
+			delay_ms(100);
     }
 }
