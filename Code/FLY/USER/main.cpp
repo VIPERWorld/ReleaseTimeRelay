@@ -15,7 +15,6 @@
 #include "aes.h"
 #include "adc.h"
 
-const char *p = "sdf";
 void SYS_INIT(void)
 {
     /***延时初始化***/
@@ -25,46 +24,9 @@ void SYS_INIT(void)
     uart_init (115200);
     uart2_init(115200);
     uart3_init(115200);
-    u32 ChipUniqueID[3];
-    ChipUniqueID[2] = *(__IO u32 *)(0X1FFFF7E8); // 低字节
-    ChipUniqueID[1] = *(__IO u32 *)(0X1FFFF7EC); //
-    ChipUniqueID[0] = *(__IO u32 *)(0X1FFFF7F0); // 高字节
-    Sys_Printf(USART1, (char *)"ChipUniqueID: %X %X %X", ChipUniqueID[0], ChipUniqueID[1], ChipUniqueID[2]);
     Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
     Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
-    {
-        unsigned char dat[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
-        unsigned char chainCipherBlock[16];
-        unsigned char i;
-        for (i = 0; i < 32; i++) AES_Key_Table[i] = i; //做运算之前先要设置好密钥，这里只是设置密钥的DEMO。
-
-        memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock));
-        aesEncInit();//在执行加密初始化之前可以为AES_Key_Table赋值有效的密码数据
-        aesEncrypt(dat, chainCipherBlock);//AES加密，数组dat里面的新内容就是加密后的数据。
-        //aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
-
-				Sys_Printf(USART1, (char *)"\r\n");
-        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
-        
-				memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock)); //这里要重新初始化清空
-        aesDecInit();//在执行解密初始化之前可以为AES_Key_Table赋值有效的密码数据
-        aesDecrypt(dat, chainCipherBlock);//AES解密，密文数据存放在dat里面，经解密就能得到之前的明文。
-
-				Sys_Printf(USART1, (char *)"\r\n");
-        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
-
-    }
-		{
-		ADC1_Init();
-    delay_ms(500);
-	  ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-		delay_ms(500);
-		int RandomSeed=ADC_ConvertedValue[0];
-		}
-		{
-			
-		}
-    delay_ms(500);
+   delay_ms(100);
 }
 
 int main(void)
@@ -73,21 +35,7 @@ int main(void)
     /***总循环***/
     while (1)
     {
-        //        Sys_Printf(USART1, (char *)"ndokes");
-        //        Sys_Printf(USART2, (char *)"nRToke");
-        //        Sys_Printf(USART3, (char *)"nUSA3 ");
-        //        Sys_Printf(USART1, (char *)"nRT1");
-        //        Sys_Printf(USART2, (char *)"nT2");
-        //        Sys_Printf(USART3, (char *)"n3");
-        //        Sys_Printf(USART1, (char *)"\r\n");
-//			for(int i=0;i<32;++i)
-//			{	
-//				
-//				ADC_SoftwareStartConvCmd(ADC1, ENABLE);
-//				delay_ms(100);
-//			}
-			srand(SysTick_Clock());
-			Sys_Printf(USART1, (char *)"\r\n%d",rand());
-			delay_ms(100);
+
+			//delay_ms(100);
     }
 }

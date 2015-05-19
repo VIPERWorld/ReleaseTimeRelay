@@ -2,35 +2,104 @@
 #include "sys.h"
 #include "usr_usart.h"
 #include "bak.h"
+/*C/C++*/
+#include "stdlib.h"
+#include "string.h"
+/*USAR*/
+#include "minos_delay.h"
+#include "aes.h"
 
+/*Define*/
 #define DATA_TRANSFER_USE_USART
 #define SUM_CHECK_HOLD 0//1 OPEN 0 CLOSE
-void Data_Send_Check(u16 check);
+/*Static Fun*/
+static void Data_Send_Check(u16 check);
+/*Variable*/
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
-u16 AbsoluteOpticalEncoder_VAL = 0;//�����ǹ�������
-u8 RelayStata;//�̵���״̬
-u8 TimeUnlock;//ʱ����
+u16 AbsoluteOpticalEncoder_VAL = 0;//绝对是光电编码器
+u8 RelayStata;//继电器状态
+u8 TimeUnlock;//时间锁
 
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
     30, 60, 90, 120,
     150, 180, 210, 360
 };
-
-
-void Ex_Anl(void)
+union
 {
-    for (int i = 0; i < 8; ++i)
+    u8 u8[12];
+    u32 u32[3];
+} ChipUniqueID;
+void Ex_Anl(u8 *data_buf)
+{
+    switch (*(data_buf + 2))
     {
-        if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i])
+    case 0X10:
+    {
+        AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
+        for (int i = 0; i < 8; ++i)
         {
-            RelayStata = i;
-            break;
+            if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i])
+            {
+                RelayStata = i;
+                break;
+            }
         }
+        Sys_Printf(Printf_USART, "\r\nAbsoluteOpticalEncoder_VAL:%d", AbsoluteOpticalEncoder_VAL);
+        Sys_Printf(Printf_USART, "\r\nRelayStata:%d", RelayStata);
+        break;
     }
-    Sys_Printf(Printf_USART, "\r\nAbsoluteOpticalEncoder_VAL:%d", AbsoluteOpticalEncoder_VAL);
-    Sys_Printf(Printf_USART, "\r\nRelayStata:%d", RelayStata);
+    case 0X11:
+    {
+        if (*(data_buf + 4) < 8)
+            AbsoluteOpticalEncoder_Apart[*(data_buf + 4)] = *(data_buf + 5);
+        Sys_Printf(Printf_USART, "\r\nAbsoluteOpticalEncoder_Apart:\r\n");
+        for (int i = 0; i < 8; i++)Sys_Printf(Printf_USART, " %d", AbsoluteOpticalEncoder_Apart[i]);
+        break;
+    }
+    case 0X12:
+    {
+        TimeUnlock = *(data_buf + 4);
+        Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d", TimeUnlock);
+        break;
+    }
+    case 0X13:
+    {
+        srand(SysTick_Clock());
+        Sys_Printf(USART1, (char *)"\r\n%d", rand());
+
+        unsigned char dat[16] = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F'};
+        unsigned char chainCipherBlock[16];
+        unsigned char i;
+        for (i = 0; i < 32; i++) AES_Key_Table[i] = i; //做运算之前先要设置好密钥，这里只是设置密钥的DEMO。
+
+        memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock));
+        aesEncInit();//在执行加密初始化之前可以为AES_Key_Table赋值有效的密码数据
+        aesEncrypt(dat, chainCipherBlock);//AES加密，数组dat里面的新内容就是加密后的数据。
+        //aesEncrypt(dat+16, chainCipherBlock);//AES源数据大于16字节时，把源数据的指针+16就好了
+
+        Sys_Printf(USART1, (char *)"\r\n");
+        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
+
+        memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock)); //这里要重新初始化清空
+        aesDecInit();//在执行解密初始化之前可以为AES_Key_Table赋值有效的密码数据
+        aesDecrypt(dat, chainCipherBlock);//AES解密，密文数据存放在dat里面，经解密就能得到之前的明文。
+
+        Sys_Printf(USART1, (char *)"\r\n");
+        for (int i = 0; i < 16; ++i)   Sys_Printf(USART1, (char *)"%X ", dat[i]);
+        break;
+    }
+    case 0X14:
+    {
+        ChipUniqueID.u32[2] = *(__IO u32 *)(0X1FFFF7E8); // 低字节
+        ChipUniqueID.u32[1] = *(__IO u32 *)(0X1FFFF7EC); //
+        ChipUniqueID.u32[0] = *(__IO u32 *)(0X1FFFF7F0); // 高字节
+        Sys_Printf(USART1, (char *)"ChipUniqueID: %X %X %X", ChipUniqueID.u32[0], ChipUniqueID.u32[1], ChipUniqueID.u32[2]);
+        Sys_Printf(USART1, (char *)"ChipUniqueID: %X %X %X %X %X %X %X %X %X %X %X %X", ChipUniqueID.u8[0], ChipUniqueID.u8[1], ChipUniqueID.u8[2], ChipUniqueID.u8[3], ChipUniqueID.u8[4], ChipUniqueID.u8[5], ChipUniqueID.u8[6], ChipUniqueID.u8[7], ChipUniqueID.u8[8], ChipUniqueID.u8[9], ChipUniqueID.u8[10], ChipUniqueID.u8[11]);
+        break;
+    }
+    }
 }
 
 void Data_Receive_Anl(u8 *data_buf, u8 num)
@@ -44,23 +113,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
     if (!(sum == *(data_buf + num - 1)))       return; //sum
 #endif
     if (!(*(data_buf) == 0xAA && *(data_buf + 1) == 0xAF))     return; //
-    if (*(data_buf + 2) == 0X10)                        //
-    {
-        AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
-				Ex_Anl();
-    }
-		if (*(data_buf + 2) == 0X11)                        //
-    {
-			if(*(data_buf + 4)<8)
-        AbsoluteOpticalEncoder_Apart[*(data_buf + 4)] = *(data_buf + 5);
-			Sys_Printf(Printf_USART, "\r\nAbsoluteOpticalEncoder_Apart:\r\n");
-			for(int i=0;i<8;i++)Sys_Printf(Printf_USART, " %d",AbsoluteOpticalEncoder_Apart[i]);
-    }
-		if (*(data_buf + 2) == 0X12)                        //
-    {
-      TimeUnlock = *(data_buf + 4);
-			Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d",TimeUnlock);
-    }
+    Ex_Anl(data_buf);
 }
 
 void Data_Exchange(void)

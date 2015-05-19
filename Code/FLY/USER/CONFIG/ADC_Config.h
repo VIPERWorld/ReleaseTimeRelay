@@ -29,7 +29,8 @@
 /*
 ex.
 	ADC1_Init();
-	
+		  ADC_SoftwareStartConvCmd(ADC1, ENABLE);
+ADC_ConvertedValue[0]
 */
 #define ADC1_DMA 1
 #define ADC1_DMAIRQ_ENABLE 0
