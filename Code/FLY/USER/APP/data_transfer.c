@@ -88,7 +88,7 @@ void Ex_Anl(u8 *data_buf)
 
         memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock)); //这里要重新初始化清空
         aesDecInit();//在执行解密初始化之前可以为AES_Key_Table赋值有效的密码数据
-        aesDecrypt(dat, chainCipherBlock);//AES解密，密文数据存放在dat里面，经解密就能得到之前的明文。
+        aesDecrypt(dat, chainCipherBlock);//AES解密，密文数据存放在dat里面，经解密就能得到之前的明文.
 
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%X ", dat[i]);
         break;
@@ -109,7 +109,7 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
 {
     vs16 rc_value_temp;
     u8 sum = 0;
-    Sys_sPrintf(Printf_USART, data_buf, num);
+    //Sys_sPrintf(Printf_USART, data_buf, num);
     for (u8 i = 0; i < (num - 1); i++)
         sum += *(data_buf + i);
 #if   SUM_CHECK_HOLD
