@@ -103,8 +103,8 @@ Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[1]);
         ChipUniqueID.u32[2] = *(__IO u32 *)(0X1FFFF7E8); // 低字节
         ChipUniqueID.u32[1] = *(__IO u32 *)(0X1FFFF7EC); //
         ChipUniqueID.u32[0] = *(__IO u32 *)(0X1FFFF7F0); // 高字节
-        Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %X %X %X", ChipUniqueID.u32[0], ChipUniqueID.u32[1], ChipUniqueID.u32[2]);
-        Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %X %X %X %X %X %X %X %X %X %X %X %X", ChipUniqueID.u8[0], ChipUniqueID.u8[1], ChipUniqueID.u8[2], ChipUniqueID.u8[3], ChipUniqueID.u8[4], ChipUniqueID.u8[5], ChipUniqueID.u8[6], ChipUniqueID.u8[7], ChipUniqueID.u8[8], ChipUniqueID.u8[9], ChipUniqueID.u8[10], ChipUniqueID.u8[11]);
+        Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %8X %8X %8X", ChipUniqueID.u32[0], ChipUniqueID.u32[1], ChipUniqueID.u32[2]);
+        Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %2X%2X%2X%2X %2X%2X%2X%2X %2X%2X%2X%2X", ChipUniqueID.u8[0], ChipUniqueID.u8[1], ChipUniqueID.u8[2], ChipUniqueID.u8[3], ChipUniqueID.u8[4], ChipUniqueID.u8[5], ChipUniqueID.u8[6], ChipUniqueID.u8[7], ChipUniqueID.u8[8], ChipUniqueID.u8[9], ChipUniqueID.u8[10], ChipUniqueID.u8[11]);
         break;
     }
     }
