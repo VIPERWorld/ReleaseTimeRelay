@@ -18,8 +18,8 @@
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
 u16 AbsoluteOpticalEncoder_VAL = 0;//绝对是光电编码器
-u8 RelayStata;//继电器状态
-u8 TimeUnlock;//时间锁
+u8 RelayStata=0;//继电器状态
+u8 TimeUnlock=0;//时间锁
 
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
@@ -34,6 +34,7 @@ union
 void Ex_Anl(u8 *data_buf)
 {
     u8 LastUnlockKey[16];
+		static u8 TimeUnlockFlag=0;
     switch (*(data_buf + 2))
     {
     case 0X10:
@@ -61,9 +62,12 @@ void Ex_Anl(u8 *data_buf)
     }
     case 0X12:
     {
+			if(TimeUnlockFlag)
+			{
         TimeUnlock = *(data_buf + 4);
-        Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d", TimeUnlock);
-        break;
+			}
+			Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d", TimeUnlock);
+			break;
     }
     case 0X13:
     {
@@ -125,6 +129,7 @@ void Ex_Anl(u8 *data_buf)
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", LastUnlockKey[i]);
         break;
     }
+		
     }
 }
 
