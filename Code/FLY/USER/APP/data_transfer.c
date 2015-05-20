@@ -74,7 +74,10 @@ void Ex_Anl(u8 *data_buf)
         } TimeRand;
         TimeRand.u16 = rand();
         Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u16);
+Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[0]);
+Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[1]);
 
+				
         unsigned char chainCipherBlock[16], dat[16] = {0};
         for (int i = 0; i < 12; ++i)dat[i] = ChipUniqueID.u8[i];
         for (int i = 0; i < 2; ++i)dat[i + 12] = TimeRand.u8[i];
