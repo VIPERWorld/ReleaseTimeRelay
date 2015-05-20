@@ -33,6 +33,7 @@ union
 } ChipUniqueID;
 void Ex_Anl(u8 *data_buf)
 {
+    u8 LastUnlockKey[16];
     switch (*(data_buf + 2))
     {
     case 0X10:
@@ -74,20 +75,21 @@ void Ex_Anl(u8 *data_buf)
         } TimeRand;
         TimeRand.u16 = rand();
         Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u16);
-Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[0]);
-Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[1]);
+        Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[0]);
+        Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[1]);
 
-				
+
         unsigned char chainCipherBlock[16], dat[16] = {0};
         for (int i = 0; i < 12; ++i)dat[i] = ChipUniqueID.u8[i];
         for (int i = 0; i < 2; ++i)dat[i + 12] = TimeRand.u8[i];
-				Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
-        
+        Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
+
         for (int i = 0; i < 32; i++) AES_Key_Table[i] = i; //做运算之前先要设置好密钥,这里只是设置密钥的DEMO
 
         memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock));
         aesEncInit();//在执行加密初始化之前可以为AES_Key_Table赋值有效的密码数据.
         aesEncrypt(dat, chainCipherBlock);//AES加密,数组dat里面的新内容就是加密后的数据.
+        for (int i = 0; i < 16; ++i)LastUnlockKey[i]=dat[i];
 
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
 
@@ -104,7 +106,23 @@ Sys_Printf(USART1, (char *)"\r\n%d", TimeRand.u8[1]);
         ChipUniqueID.u32[1] = *(__IO u32 *)(0X1FFFF7EC); //
         ChipUniqueID.u32[0] = *(__IO u32 *)(0X1FFFF7F0); // 高字节
         Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %8X %8X %8X", ChipUniqueID.u32[0], ChipUniqueID.u32[1], ChipUniqueID.u32[2]);
-        Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %2X%2X%2X%2X %2X%2X%2X%2X %2X%2X%2X%2X", ChipUniqueID.u8[3], ChipUniqueID.u8[2], ChipUniqueID.u8[1], ChipUniqueID.u8[0], ChipUniqueID.u8[7], ChipUniqueID.u8[6], ChipUniqueID.u8[5], ChipUniqueID.u8[4], ChipUniqueID.u8[11], ChipUniqueID.u8[10], ChipUniqueID.u8[9], ChipUniqueID.u8[8]);
+        Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %2X%2X%2X%2X %2X%2X%2X%2X %2X%2X%2X%2X", ChipUniqueID.u8[0], ChipUniqueID.u8[1], ChipUniqueID.u8[2], ChipUniqueID.u8[3], ChipUniqueID.u8[4], ChipUniqueID.u8[5], ChipUniqueID.u8[6], ChipUniqueID.u8[7], ChipUniqueID.u8[8], ChipUniqueID.u8[9], ChipUniqueID.u8[10], ChipUniqueID.u8[11]);
+        break;
+    }
+    case 0X15:
+    {
+        unsigned char chainCipherBlock[16], dat[16] = {0};
+        for (int i = 0; i < 16; ++i)dat[i] = *(data_buf + 4+i);
+        Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
+
+        for (int i = 0; i < 32; i++) AES_Key_Table[i] = i; //做运算之前先要设置好密钥,这里只是设置密钥的DEMO
+
+        memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock)); //这里要重新初始化清空
+        aesDecInit();//在执行解密初始化之前可以为AES_Key_Table赋值有效的密码数据
+        aesDecrypt(dat, chainCipherBlock);//AES解密，密文数据存放在dat里面，经解密就能得到之前的明文.
+
+        Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
+        Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", LastUnlockKey[i]);
         break;
     }
     }
