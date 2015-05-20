@@ -77,7 +77,7 @@ void Ex_Anl(u8 *data_buf)
 
         unsigned char chainCipherBlock[16], dat[16] = {0};
         for (int i = 0; i < 12; ++i)dat[i] = ChipUniqueID.u8[i];
-        for (int i = 0; i < 2; ++i)ChipUniqueID.u8[i + 12] = TimeRand.u8[i];
+        for (int i = 0; i < 2; ++i)dat[i + 12] = TimeRand.u8[i];
         for (int i = 0; i < 32; i++) AES_Key_Table[i] = i; //做运算之前先要设置好密钥,这里只是设置密钥的DEMO
 
         memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock));
