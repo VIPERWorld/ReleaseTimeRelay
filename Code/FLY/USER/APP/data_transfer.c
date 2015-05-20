@@ -115,8 +115,7 @@ void Ex_Anl(u8 *data_buf)
         break;
     }
     case 0X15:
-    {
-			
+    {			
         unsigned char chainCipherBlock[16], dat[16] = {0};
         for (int i = 0; i < 16; ++i)dat[i] = *(data_buf + 4 + i);
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
