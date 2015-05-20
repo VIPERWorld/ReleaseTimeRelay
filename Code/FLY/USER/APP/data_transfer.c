@@ -18,8 +18,8 @@
 struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
 u16 AbsoluteOpticalEncoder_VAL = 0;//绝对是光电编码器
-u8 RelayStata=0;//继电器状态
-u8 TimeUnlock=0;//时间锁
+u8 RelayStata = 0; //继电器状态
+u8 TimeUnlock = 0; //时间锁
 
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
@@ -34,7 +34,7 @@ union
 void Ex_Anl(u8 *data_buf)
 {
     u8 LastUnlockKey[16];
-		static u8 TimeUnlockFlag=0;
+    static u8 TimeUnlockFlag = 0;
     switch (*(data_buf + 2))
     {
     case 0X10:
@@ -62,12 +62,13 @@ void Ex_Anl(u8 *data_buf)
     }
     case 0X12:
     {
-			if(TimeUnlockFlag)
-			{
-        TimeUnlock = *(data_buf + 4);
-			}
-			Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d", TimeUnlock);
-			break;
+        if (TimeUnlockFlag)
+        {
+            TimeUnlockFlag = 0;
+            TimeUnlock = *(data_buf + 4);
+        }
+        Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d", TimeUnlock);
+        break;
     }
     case 0X13:
     {
@@ -93,7 +94,7 @@ void Ex_Anl(u8 *data_buf)
         memset(chainCipherBlock, 0x00, sizeof(chainCipherBlock));
         aesEncInit();//在执行加密初始化之前可以为AES_Key_Table赋值有效的密码数据.
         aesEncrypt(dat, chainCipherBlock);//AES加密,数组dat里面的新内容就是加密后的数据.
-        for (int i = 0; i < 16; ++i)LastUnlockKey[i]=dat[i];
+        for (int i = 0; i < 16; ++i)LastUnlockKey[i] = dat[i];
 
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
 
@@ -115,8 +116,9 @@ void Ex_Anl(u8 *data_buf)
     }
     case 0X15:
     {
+			
         unsigned char chainCipherBlock[16], dat[16] = {0};
-        for (int i = 0; i < 16; ++i)dat[i] = *(data_buf + 4+i);
+        for (int i = 0; i < 16; ++i)dat[i] = *(data_buf + 4 + i);
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
 
         for (int i = 0; i < 32; i++) AES_Key_Table[i] = i; //做运算之前先要设置好密钥,这里只是设置密钥的DEMO
@@ -127,9 +129,18 @@ void Ex_Anl(u8 *data_buf)
 
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", LastUnlockKey[i]);
+        {
+            int i;
+            for ( i = 0; i < 16; ++i)
+                if (dat[i] != LastUnlockKey[i])
+                    break;
+            if (i == 16)
+                TimeUnlockFlag = 1;
+            else
+                TimeUnlockFlag = 0;
+        }
         break;
     }
-		
     }
 }
 
