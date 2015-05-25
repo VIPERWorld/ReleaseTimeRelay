@@ -62,6 +62,5 @@ int main(void)
     {
 			RunTaskA(task_led,0);
 			RunTaskA(task_rtc,1);
-			
     }
 }
