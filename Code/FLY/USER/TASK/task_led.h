@@ -1,10 +1,10 @@
 #ifdef __cplusplus
        extern "C" {
 #endif
-#define LED1_Init     PA2_OUT
-#define LED1_Toggle {static char i = 0;PAout(2) = i++&0X01;}
-#define LED1_H PAout(2) = 1
-#define LED1_L PAout(2) = 0
+#define LED1_Init     PC13_OUT
+#define LED1_Toggle {static char i = 0;PCout(13) = i++&0X01;}
+#define LED1_H PCout(13) = 1
+#define LED1_L PCout(13) = 0
 
 int task_led(void)
 {
