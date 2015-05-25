@@ -32,7 +32,7 @@ void SYS_INIT(void)
 }
 
 #include "rtc.h"
-unsigned char  task1()
+char task_rtc(void)
 {
     _SS
     if (RTC_Init())
@@ -59,5 +59,7 @@ int main(void)
     while (1)
     {
 			RunTaskA(task_led,0);
+			RunTaskA(task_rtc,1);
+			
     }
 }
