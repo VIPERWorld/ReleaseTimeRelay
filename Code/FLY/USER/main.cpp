@@ -35,7 +35,6 @@ int main(void)
     /***总循环***/
     while (1)
     {
-
 			//delay_ms(100);
     }
 }
