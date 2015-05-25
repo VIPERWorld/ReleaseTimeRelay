@@ -1,5 +1,9 @@
 #ifndef _DATA_TRANSFER_H_
 #define _DATA_TRANSFER_H_
+#ifdef __cplusplus
+       extern "C" {
+#endif
+
 #include "sys.h"
 typedef struct int16_rcget
 {
@@ -53,5 +57,14 @@ extern PID PID_ROL, PID_PIT, PID_YAW, PID_ALT, PID_POS,
     PID_PID_5, PID_PID_6, PID_PID_7, PID_PID_8,
     PID_PID_9, PID_PID_10, PID_PID_11, PID_PID_12;
 
+typedef union
+{
+	u8 u8[4];
+	u32 u32;
+}_Uu32u8;//Ëø¶¨Ê±¼ä
+extern _Uu32u8 TimeUnlock;
+#ifdef __cplusplus
+        }
+#endif
 #endif
 

@@ -33,6 +33,8 @@ void SYS_INIT(void)
 }
 
 #include "rtc.h"
+#include "data_transfer.h"
+
 char task_rtc(void)
 {
     _SS
@@ -62,7 +64,7 @@ char task_rtc(void)
 			  +calendar.w_date)*100
 			  +calendar.hour)*100
 			  +calendar.min);
-				if(tmp<100)
+				if(tmp<TimeUnlock.u32)
 			{
 				
 			}
