@@ -28,9 +28,30 @@ void SYS_INIT(void)
     uart3_init(115200);
     Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
     Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
-   delay_ms(100);
+    delay_ms(100);
 }
 
+#include "rtc.h"
+unsigned char  task1()
+{
+    _SS
+    if (RTC_Init())
+    {
+        Sys_Printf(USART2, (char *)"\r\n RTC ok");
+    }
+    else
+    {
+        Sys_Printf(USART2, (char *)"\r\n RTC no");
+    }
+    while (1)
+    {
+        WaitX(200);
+        unsigned char time[24];
+        get_time((u8 *)time);
+        Sys_sPrintf(USART2, time, 24);
+    }
+    _EE
+}
 int main(void)
 {
     SYS_INIT();
@@ -38,7 +59,5 @@ int main(void)
     while (1)
     {
 			RunTaskA(task_led,0);
-			
-			//delay_ms(100);
     }
 }
