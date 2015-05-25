@@ -15,6 +15,8 @@
 #include "aes.h"
 #include "adc.h"
 
+#include "task_led.h"
+
 void SYS_INIT(void)
 {
     /***延时初始化***/
@@ -35,6 +37,8 @@ int main(void)
     /***总循环***/
     while (1)
     {
+			RunTaskA(task_led,0);
+			
 			//delay_ms(100);
     }
 }

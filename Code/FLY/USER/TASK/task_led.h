@@ -13,43 +13,25 @@ int task_led(void)
     LED1_H;
     while (1)
     {
-        if (RC_Control.ARMED)
-        {
-            if (RC_Control.ALT_ON_OFF)
-            {
-                WaitX(50);
-                LED1_Toggle;
-            }
-            else
-            {
-                WaitX(100);
-                LED1_H;
-            }
-        }
-        else
-        {
             WaitX(200);
             LED1_Toggle;
-        }
-				        
-
     }
     _EE
 }
 
-int loop_led(void)
-{
-    _SS
-    LED1_Init;
-    LED1_H;
-    _LOOP_SS
-    if (RC_Control.ARMED)
-        LED1_H;
-    else
-        LED1_Toggle;
-    LoopX(500);
-    _EE
-}
+//int loop_led(void)
+//{
+//    _SS
+//    LED1_Init;
+//    LED1_H;
+//    _LOOP_SS
+//    if (RC_Control.ARMED)
+//        LED1_H;
+//    else
+//        LED1_Toggle;
+//    LoopX(500);
+//    _EE
+//}
 #ifdef __cplusplus
         }
 #endif
