@@ -15,12 +15,13 @@
 /*Static Fun*/
 //static void Data_Send_Check(u16 check);
 /*Variable*/
-struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
+//struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
-u16 AbsoluteOpticalEncoder_VAL = 0;//绝对是光电编码器
+u16 AbsoluteOpticalEncoder_VAL = 0;//绝对式光电编码器
 u8 RelayStata = 0; //继电器状态
-
 _Uu32u8 TimeUnlock;//锁定时间
+u8 TimeUnlockFlag=0;
+
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
     30, 60, 90, 120,
@@ -34,7 +35,7 @@ union
 void Ex_Anl(u8 *data_buf)
 {
     u8 LastUnlockKey[16];
-    static u8 TimeUnlockFlag = 0;
+    static u8 KeyUnlockFlag = 0;
     switch (*(data_buf + 2))
     {
     case 0X10:
@@ -62,9 +63,9 @@ void Ex_Anl(u8 *data_buf)
     }
     case 0X12:
     {
-        if (TimeUnlockFlag)
+        if (KeyUnlockFlag)
         {
-            TimeUnlockFlag = 0;
+            KeyUnlockFlag = 0;
             TimeUnlock.u8[0] = *(data_buf + 4);
 					  TimeUnlock.u8[1] = *(data_buf + 5);
 					  TimeUnlock.u8[2] = *(data_buf + 6);
@@ -141,9 +142,9 @@ void Ex_Anl(u8 *data_buf)
                 if (dat[i] != LastUnlockKey[i])
                     break;
             if (i == 16)
-                TimeUnlockFlag = 1;
+                KeyUnlockFlag = 1;
             else
-                TimeUnlockFlag = 0;
+                KeyUnlockFlag = 0;
         }
         break;
     }
