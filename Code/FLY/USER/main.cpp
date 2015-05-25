@@ -51,15 +51,16 @@ char task_rtc(void)
         unsigned char time[24];
         get_time((u8 *)time);
         Sys_sPrintf(USART1, time, 24);
-//			if(u32(u32(u32(u32(u32(u32(calendar.w_year)*100
+//			if(u32(u32(u32(u32(u32(calendar.w_year%100)*100
 //				+calendar.w_month)*100
 //			  +calendar.w_date)*100
 //			  +calendar.hour)*100
-//			  +calendar.min)*100
-//			  +calendar.sec)<100)
+//			  +calendar.min)<100)
 //			{
-//				
-//			}
+				if((calendar.w_year%100)<100)
+			{
+				
+			}
     }
     _EE
 }
