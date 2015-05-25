@@ -26,9 +26,9 @@ void SYS_INIT(void)
     uart_init (115200);
     uart2_init(115200);
     uart3_init(115200);
-	  Sys_Printf(USART1, (char *)"\r\nUSART1 okhghg");
-    Sys_Printf(USART2, (char *)"\r\nUSART2 okrth5");
-    Sys_Printf(USART3, (char *)"\r\nUSART3 okewtr");
+	  Sys_Printf(USART1, (char *)"USART1 okhghg");
+    Sys_Printf(USART2, (char *)"USART2 okrth5");
+    Sys_Printf(USART3, (char *)"USART3 okewtr");
     delay_ms(100);
 }
 
