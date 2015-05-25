@@ -18,7 +18,7 @@
 //struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
 u16 AbsoluteOpticalEncoder_VAL = 0;//绝对式光电编码器
-u8 RelayStata = 0; //继电器状态
+u8 RelayStata[8] = {0}; //继电器状态
 _Uu32u8 TimeUnlock;//锁定时间
 u8 TimeUnlockFlag=0;
 
@@ -45,7 +45,7 @@ void Ex_Anl(u8 *data_buf)
         {
             if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i])
             {
-                RelayStata = i;
+                RelayStata[i] = 1;
                 break;
             }
         }
