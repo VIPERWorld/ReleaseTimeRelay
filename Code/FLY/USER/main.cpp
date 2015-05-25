@@ -35,7 +35,7 @@ void SYS_INIT(void)
 #include "rtc.h"
 #include "data_transfer.h"
 
-char task_rtc(void)
+u16 task_rtc(void)
 {
     _SS
     if (RTC_Init() == 0)
