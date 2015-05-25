@@ -57,7 +57,11 @@ char task_rtc(void)
 //			  +calendar.hour)*100
 //			  +calendar.min)<100)
 //			{
-			uint64_t tmp=((calendar.w_year%100)*100+calendar.w_month)*100+calendar.w_date;
+			uint64_t tmp=((((((calendar.w_year%100)*100
+				+calendar.w_month)*100
+			  +calendar.w_date)*100
+			  +calendar.hour)*100
+			  +calendar.min)<100);
 				if(tmp<100)
 			{
 				
