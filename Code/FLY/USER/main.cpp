@@ -38,18 +38,18 @@ char task_rtc(void)
     _SS
     if (RTC_Init())
     {
-        Sys_Printf(USART2, (char *)"\r\n RTC ok");
+        Sys_Printf(USART1, (char *)"\r\n RTC ok");
     }
     else
     {
-        Sys_Printf(USART2, (char *)"\r\n RTC no");
+        Sys_Printf(USART1, (char *)"\r\n RTC no");
     }
     while (1)
     {
         WaitX(200);
         unsigned char time[24];
         get_time((u8 *)time);
-        Sys_sPrintf(USART2, time, 24);
+        Sys_sPrintf(USART1, time, 24);
     }
     _EE
 }
