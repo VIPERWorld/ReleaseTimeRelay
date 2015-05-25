@@ -50,7 +50,7 @@
           <OutputName>EX</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
-          <CreateHexFile>1</CreateHexFile>
+          <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
           <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\OBJ\</ListingPath>
@@ -200,7 +200,7 @@
             <AdsACrf>1</AdsACrf>
             <AdsANop>0</AdsANop>
             <AdsANot>0</AdsANot>
-            <AdsLLst>1</AdsLLst>
+            <AdsLLst>0</AdsLLst>
             <AdsLmap>1</AdsLmap>
             <AdsLcgr>1</AdsLcgr>
             <AdsLsym>1</AdsLsym>
@@ -365,7 +365,7 @@
               <MiscControls></MiscControls>
               <Define>STM32F10X_MD,USE_STDPERIPH_DRIVER</Define>
               <Undefine></Undefine>
-              <IncludePath>..\GLIB\SYSTEM;..\GLIB\HARDWARE;..\GLIB\STM32F10x_StdPeriph_Driver\inc;.\USER;..\GLIB\CMSIS\CM3\CoreSupport;.\USER\APP;..\GLIB\PERIPHERAL\LCD\lcd12864;..\GLIB\PERIPHERAL\DHT11;..\GLIB\PERIPHERAL\SD;..\GLIB\FATFS\src;..\GLIB\FATFS\exfuns;..\GLIB\PERIPHERAL\LCD;..\GLIB\PERIPHERAL\DS18B20;.\USER\CONFIG;..\GLIB\PERIPHERAL\ULTRASONIC;..\GLIB\PERIPHERAL\HMC5883L;..\GLIB\PERIPHERAL\MPU6050;.\USER\APP\Kalman_Fliter;..\GLIB\ALGORITHM\aes_rc6_rsa_tea_sha1_sha256_md5\AES</IncludePath>
+              <IncludePath>..\GLIB\SYSTEM;..\GLIB\HARDWARE;..\GLIB\STM32F10x_StdPeriph_Driver\inc;.\USER;..\GLIB\CMSIS\CM3\CoreSupport;.\USER\APP;..\GLIB\PERIPHERAL\LCD\lcd12864;..\GLIB\PERIPHERAL\DHT11;..\GLIB\PERIPHERAL\SD;..\GLIB\FATFS\src;..\GLIB\FATFS\exfuns;..\GLIB\PERIPHERAL\LCD;..\GLIB\PERIPHERAL\DS18B20;.\USER\CONFIG;..\GLIB\PERIPHERAL\ULTRASONIC;..\GLIB\PERIPHERAL\HMC5883L;..\GLIB\PERIPHERAL\MPU6050;.\USER\APP\Kalman_Fliter;..\GLIB\ALGORITHM\aes_rc6_rsa_tea_sha1_sha256_md5\AES;.\USER\TASK</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -568,6 +568,11 @@
               <FileType>5</FileType>
               <FilePath>.\USER\TASK\TaskEx.h</FilePath>
             </File>
+            <File>
+              <FileName>task_led.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\USER\TASK\task_led.h</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -632,6 +637,11 @@
               <FileName>adc.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\GLIB\HARDWARE\adc.c</FilePath>
+            </File>
+            <File>
+              <FileName>rtc.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\GLIB\HARDWARE\rtc.c</FilePath>
             </File>
           </Files>
         </Group>
