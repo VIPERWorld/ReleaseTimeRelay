@@ -23,7 +23,7 @@ u8 RelayStata = 0; //继电器状态
 union
 {
 	u8 u8[8];
-	u32 u64[2];
+	uint64_t u64[2];
 }TimeUnlock;//锁定时间
 u16 AbsoluteOpticalEncoder_Apart[8] =
 {
