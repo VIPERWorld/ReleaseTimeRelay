@@ -39,6 +39,7 @@ char task_rtc(void)
     if (RTC_Init())
     {
         Sys_Printf(USART1, (char *)"\r\n RTC ok");
+			  RTC_Set(2015,5,25,11,8,30);
     }
     else
     {
