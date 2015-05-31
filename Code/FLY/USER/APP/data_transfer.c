@@ -22,7 +22,7 @@ u8 RelayStata[8] = {0}; //继电器状态
 _Uu32u8 TimeUnlock;//锁定时间
 u8 TimeUnlockFlag=0;
 
-u16 AbsoluteOpticalEncoder_Apart[8] =
+u16 AbsoluteOpticalEncoder_Apart[8] =//继电器阈值
 {
     30, 60, 90, 120,
     150, 180, 210, 360
@@ -38,7 +38,7 @@ void Ex_Anl(u8 *data_buf)
     static u8 KeyUnlockFlag = 0;
     switch (*(data_buf + 2))
     {
-    case 0X10:
+    case 0X10://输入编码器角度
     {
         AbsoluteOpticalEncoder_VAL = *(data_buf + 4);
         for (int i = 0; i < 8; ++i)
@@ -53,7 +53,7 @@ void Ex_Anl(u8 *data_buf)
         Sys_Printf(Printf_USART, "\r\nRelayStata:%d", RelayStata);
         break;
     }
-    case 0X11:
+    case 0X11://修改单个继电器阈值
     {
         if (*(data_buf + 4) < 8)
             AbsoluteOpticalEncoder_Apart[*(data_buf + 4)] = *(data_buf + 5);
@@ -61,7 +61,7 @@ void Ex_Anl(u8 *data_buf)
         for (int i = 0; i < 8; i++)Sys_Printf(Printf_USART, " %d", AbsoluteOpticalEncoder_Apart[i]);
         break;
     }
-    case 0X12:
+    case 0X12://设定TimeUnlock锁定时间
     {
         if (KeyUnlockFlag)
         {
@@ -69,16 +69,12 @@ void Ex_Anl(u8 *data_buf)
             TimeUnlock.u8[0] = *(data_buf + 4);
 					  TimeUnlock.u8[1] = *(data_buf + 5);
 					  TimeUnlock.u8[2] = *(data_buf + 6);
-					  TimeUnlock.u8[3] = *(data_buf + 7);
-//					  TimeUnlock.u8[4] = *(data_buf + 8);
-//					  TimeUnlock.u8[5] = *(data_buf + 9);
-//					  TimeUnlock.u8[6] = *(data_buf + 10);
-//					  TimeUnlock.u8[7] = *(data_buf + 11);					
+					  TimeUnlock.u8[3] = *(data_buf + 7);		
         }
         Sys_Printf(Printf_USART, "\r\nTimeUnlock:%d", TimeUnlock);
         break;
     }
-    case 0X13:
+    case 0X13://得到解锁初始密钥
     {
         srand(SysTick_Clock());
         union
@@ -113,7 +109,7 @@ void Ex_Anl(u8 *data_buf)
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);
         break;
     }
-    case 0X14:
+    case 0X14://得到IC ID
     {
         ChipUniqueID.u32[2] = *(__IO u32 *)(0X1FFFF7E8); // 低字节
         ChipUniqueID.u32[1] = *(__IO u32 *)(0X1FFFF7EC); //
@@ -122,8 +118,8 @@ void Ex_Anl(u8 *data_buf)
         Sys_Printf(USART1, (char *)"\r\nChipUniqueID: %2X%2X%2X%2X %2X%2X%2X%2X %2X%2X%2X%2X", ChipUniqueID.u8[0], ChipUniqueID.u8[1], ChipUniqueID.u8[2], ChipUniqueID.u8[3], ChipUniqueID.u8[4], ChipUniqueID.u8[5], ChipUniqueID.u8[6], ChipUniqueID.u8[7], ChipUniqueID.u8[8], ChipUniqueID.u8[9], ChipUniqueID.u8[10], ChipUniqueID.u8[11]);
         break;
     }
-    case 0X15:
-    {			
+    case 0X15://输入解锁密钥 解锁控制权
+    {
         unsigned char chainCipherBlock[16], dat[16] = {0};
         for (int i = 0; i < 16; ++i)dat[i] = *(data_buf + 4 + i);
         Sys_Printf(USART1, (char *)"\r\n"); for (int i = 0; i < 16; ++i)Sys_Printf(USART1, (char *)"%2X ", dat[i]);

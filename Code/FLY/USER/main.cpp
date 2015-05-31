@@ -87,22 +87,23 @@ void RelayControl(u8 num, u8 stata)
 {
     switch (num << 2 | stata)
     {
-    case  0: RELAY0_OFF
-    case  1: RELAY0_ON
-    case  2: RELAY1_OFF
-    case  3: RELAY1_ON
-    case  4: RELAY2_OFF
-    case  5: RELAY2_ON
-    case  6: RELAY3_OFF
-    case  7: RELAY3_ON
-    case  8: RELAY4_OFF
-    case  9: RELAY4_ON
-    case 10: RELAY5_OFF
-    case 11: RELAY5_ON
-    case 12: RELAY6_OFF
-    case 13: RELAY6_ON
-    case 14: RELAY7_OFF
-    case 15: RELAY7_ON
+    case  0: RELAY0_OFF; break;
+    case  1: RELAY0_ON;  break;
+    case  2: RELAY1_OFF; break;
+    case  3: RELAY1_ON;  break;
+    case  4: RELAY2_OFF; break;
+    case  5: RELAY2_ON;  break;
+    case  6: RELAY3_OFF; break;
+    case  7: RELAY3_ON;  break;
+    case  8: RELAY4_OFF; break;
+    case  9: RELAY4_ON;  break;
+    case 10: RELAY5_OFF; break;
+    case 11: RELAY5_ON;  break;
+    case 12: RELAY6_OFF; break;
+    case 13: RELAY6_ON;  break;
+    case 14: RELAY7_OFF; break;
+    case 15: RELAY7_ON;  break;
+	default:break;
     }
 }
 

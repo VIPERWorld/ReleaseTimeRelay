@@ -662,11 +662,6 @@
           <GroupName>COMMUNICATION</GroupName>
           <Files>
             <File>
-              <FileName>rc.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\USER\APP\rc.c</FilePath>
-            </File>
-            <File>
               <FileName>data_transfer.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\USER\APP\data_transfer.c</FilePath>
