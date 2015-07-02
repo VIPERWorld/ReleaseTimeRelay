@@ -1,0 +1,18 @@
+¿ì½Ý¼ü £º
+  Alt + N      New a Project   
+  Alt + O      Open a Project  
+  Alt + S      Save  current Project
+  Alt + A      Save as current Project
+      Alt + C      Close current Project
+      Alt + V      VP Address Watch
+
+  Alt + R      Change Resolution    
+  Alt + B      Create Config to 13 and 14 bin 
+  Alt + I      Import Config.
+  Alt + E      Variable Export
+      Alt + H      Help 
+
+      F2           Select Touch Config Toolbar
+      F3           Select Variable Config Toolbar
+      F4           Select Edit toolBar
+            

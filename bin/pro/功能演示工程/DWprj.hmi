@@ -1,0 +1,35 @@
+[INIT]
+PICFIX=1
+VARCount=64
+SCREENDSIZE=800X480
+SPADDRESS=5000
+[IMG]
+00=00_开机.bmp
+01=01_开机.bmp
+02=02_开机.bmp
+03=03_开机.bmp
+04=04_首页.bmp
+05=05_首页效果.bmp
+06=06_数据显示.bmp
+07=07_数据键盘.bmp
+08=08_数据效果.bmp
+09=09_文本显示.bmp
+10=10_文本键盘.bmp
+11=11_文本键盘效果.bmp
+12=12_RTC.bmp
+13=13_弹出菜单1.bmp
+14=14_弹出菜单2.bmp
+15=15_变量图标+按键值返回.bmp
+16=16_曲线.bmp
+17=17_曲线效果.bmp
+18=18_列表.bmp
+19=19_艺术字.bmp
+20=20_位变量.bmp
+21=21_时间变量.bmp
+22=22_基本图形1.bmp
+23=23_基本图形2.bmp
+24=24_图标旋转.bmp
+25=25_Firmware.bmp
+26=26_Firmware animation.bmp
+27=27_Communications.bmp
+28=28_Communications animation.bmp
