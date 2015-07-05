@@ -199,6 +199,26 @@ const char *ATCommandList[][3] = {
         "AT+SSID=?",
         "OK=\"2.4G\"",
         "AT+SSID=2.4G",
+    },
+    {
+        "AT+ENCRY=?"
+        "OK=7"
+        "AT+ENCRY=7"
+    },
+    {
+        "AT+KEY=?"
+        "OK=1,0,\"a7070318\""
+        "AT+KEY=1,0,\"a7070318\""
+    },
+    {
+        "AT+NIP=?"
+        "OK=0"
+        "AT+NIP=0"
+    },
+    {
+        "AT+ATM=?"
+        "OK=1"
+        "AT+ATM=1"
     }
 };
 
@@ -247,7 +267,7 @@ int TaskUsrtWifi(void)
             }
         }
     }
-    for (static int i2 = 0; i2 < 2; ++i2)
+    for (static int i2 = 0; i2 < 6; ++i2)
     {
 
         WaitX(1000);
@@ -295,7 +315,7 @@ int TaskUsrtWifi(void)
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+PMTF\r"); //存到FLASH
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+Z\r"); //复位
 
-    // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKCT=0,0,192.168.1.116,4001\r"); //建立SOCKET
+    WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKCT=0,0,192.168.1.116,4001\r"); //建立SOCKET
     // /* WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKSTT=1\r"); //查询SOCKET 1
     //    WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKCLS=1\r"); //删除SOCKET
     //  */
