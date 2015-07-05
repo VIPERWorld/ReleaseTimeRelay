@@ -198,7 +198,7 @@ int TaskUsrtWifi(void)
     _SS
     //UsrtWifiGetFlash();
     WaitX(1000);
-    for (static int i = 0; i < 2; i++)
+    for (static int i1 = 0; i1 < 2; i1++)
     {
         Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
         Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r\n"); //空指令
@@ -206,7 +206,7 @@ int TaskUsrtWifi(void)
         {
             WaitX(1000);
             if (0x00 != UsrtWifiAtRxBuffer[0])
-            {
+            {UsrtWifiAtRxBuffer[0]=0;
                 Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
                 break;
             }
