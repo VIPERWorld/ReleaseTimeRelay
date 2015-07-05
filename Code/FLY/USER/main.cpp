@@ -26,8 +26,8 @@ void SYS_INIT(void)
     uart_init (115200);
     uart2_init(115200);
     //uart3_init(115200);
-    Sys_Printf(USART1, (char *)"USART1 okhghg");
-    Sys_Printf(USART2, (char *)"USART2 okrth5");
+    Sys_Printf(USART1, (char *)"USART1 okhghg\r\n");
+    Sys_Printf(USART2, (char *)"USART2 okrth5\r\n");
     //Sys_Printf(USART3, (char *)"USART3 okewtr");
     delay_ms(100);
 }
@@ -200,22 +200,30 @@ int TaskUsrtWifi(void)
     WaitX(1000);
     for (static int i1 = 0; i1 < 2; i1++)
     {
+			static int i;
+			i=0;
         Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
         Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r\n"); //空指令
-        for (static int i = 0; i < 10; ++i)
+        for (; i < 10; ++i)
         {
             WaitX(1000);
             if (0x00 != UsrtWifiAtRxBuffer[0])
-            {UsrtWifiAtRxBuffer[0]=0;
+            {		
+								UsrtWifiAtRxBuffer[0]=0;
                 Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
+							
+							if(strncmp((char*)"OK",(char*)(UsrtWifiAtRxBuffer + 1),2)==0)
+							{
+							}
                 break;
             }
             if (9 == i)
             {
                 Sys_Printf(UARTWIFIUARTNUM, (char *)"+++");
-                Sys_Printf(DEBUG_UARTNUM, (char *)"+++");
+                Sys_Printf(DEBUG_UARTNUM, (char *)"+++\r\n");
             }
         }
+
     }
 
     // //WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"+++"); //透明模式 逃逸
