@@ -198,19 +198,19 @@ int TaskUsrtWifi(void)
     _SS
     //UsrtWifiGetFlash();
     WaitX(1000);
+	{
+		int breakflag;
+		breakflag=0;
     for (static int i1 = 0; i1 < 10; i1++)
     {
         static int i;
-        int breakflag = 0;
         i = 0;
-
         WaitX(1000);
         Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
         Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r\n"); //空指令
         for (; i < 10; ++i)
         {
             WaitX(1000);
-
             if (0x00 != UsrtWifiAtRxBuffer[0])
             {
                 UsrtWifiAtRxBuffer[0] = 0;
@@ -233,6 +233,7 @@ int TaskUsrtWifi(void)
             break;
         }
     }
+	}
     Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+ENTM\r");
     // //WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"+++"); //透明模式 逃逸
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+WPRT=0\r"); //0设置为对等网络STA
