@@ -1,0 +1,14 @@
+[DEFAULT]
+BASEURL=about:blank
+[InternetShortcut]
+URL=http://www.cngr.cn/taobao/
+Modified=904E8675445AC6013E
+IconFile=C:\WINDOWS\system32\SHELL32.dll
+HotKey=0
+IconIndex=86
+IDList=
+[InternetShortcut.A]
+[InternetShortcut.W]
+IconFile=C:+AFw-Documents and Settings+AFw-Administrator.WWW-4E0E3D7CE7E+AFxoTJdiAFw-tbw.ico
+[{000214A0-0000-0000-C000-000000000046}]
+Prop3=19,2

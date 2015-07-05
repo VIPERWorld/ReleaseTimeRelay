@@ -1,0 +1,95 @@
+================SmartConfig功能说明==========================
+
+说明：
+  
+   SmartConfig是给用户提供了一种简洁的配置模块的方式。使用SmartConfig用户不需要首先连接到模块，
+
+即可实现对WiFi模块的配置。
+
+
+注意问题：
+  
+   由于WiFi模块对用户路由器的名称（ssid）、加密类型、秘钥、信道等等情况一无所知。还要实现连接路由器
+
+的操作。因此，SmartConfig配置将需要更长的时间来完成。并且配置过程有可能失败。如果配置没有成功，请重新
+
+进行配置。
+
+
+
+流程说明：
+
+   WiFi利用了一种类似监听的方式，来传输必要的信息。用户的APP只需要将必要的信息发送出来即可。
+
+  1、用户需要将连接路由器的ssid以及密码，2项参数根据编码的方式通过无线网络的方式发送到空中。
+
+        编码方式见：
+             staCom::sendencodeSsidString(char * Ssid,SOCKET sockClient,SOCKADDR * sockAdr)  //////Ssid编码方式
+                  
+             staCom::sendencodeKeyString(char * KeyStr,SOCKET sockClient,SOCKADDR * sockAdr) /////密码编码方式
+
+  2、用户在发送编码以前，需要发送通讯的同步头，同步头发送的流程如下：
+
+      	     sendto(ScansockClient,"abcd",strlen("abcd"),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+	     sendto(ScansockClient,"abcd",strlen("abcd"),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+	     sendto(ScansockClient,"abcdefghijklmnopqrstuvw",strlen("abcdefghijklmnopqrstuvw"),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+	     sendto(ScansockClient,"abcdefghijklmnopqrstuvw",strlen("abcdefghijklmnopqrstuvw"),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+             sendencodefromwifi(ScansockClient,(SOCKADDR*)&sockAdr,1399);
+  3、用户在发送路由器的ssid与秘钥key之间需要插入发送以下数据：
+             sendencodefromwifi(ScansockClient,(SOCKADDR*)&sockAdr,1299);
+
+  4、用户在发送路由器的ssid与秘钥key以前，需要发送ssid与key的长度信息。发送流程如下：
+
+                ///////////////////////SSID长度编码以及发送////////////////////////////
+                ssidlen=strlen((char*)Ssid)+1+27;////1 wei check
+	        ssidlentemp1=(ssidlen&0xF0)>>4;
+	        ssidlentemp2=(ssidlen&0x0F);
+        	if((ssidlentemp1+ssidlentemp2)%2==0)
+		{
+                   ssidlensend1=ssidlentemp1|0x70;
+                   ssidlensend2=ssidlentemp2|0x70;
+		}
+		else
+		{
+                  ssidlensend1=ssidlentemp1|0x30;
+                  ssidlensend2=ssidlentemp2|0x30;
+		}
+		/*send ssidlen*/
+		sendto(ScansockClient,Databuf,(ssidlensend1+593),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+		sendto(ScansockClient,Databuf,(ssidlensend1+593),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+                ssidlensend2 |=0x80;////ssid len index is bit7
+		sendto(ScansockClient,Databuf,(ssidlensend2+593),0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+
+
+               ///////////////////////KEY长度编码以及发送////////////////////////////
+               Keylen=strlen(Config_key)+1+27;/////1 wei check
+	       Keylentemp1=(Keylen&0xF0)>>4;
+	       Keylentemp2=(Keylen&0x0F);
+	       if((Keylentemp1+Keylentemp2)%2==0)
+		{
+                  Keylensend1=Keylentemp1|0x70;
+                  Keylensend2=Keylentemp2|0x70;
+		}
+		else
+		{
+                  Keylensend1=Keylentemp1|0x30;
+                  Keylensend2=Keylentemp2|0x30;
+		}
+
+		/*2 times*/
+		sendto(ScansockClient,Databuf,Keylensend1,0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+		sendto(ScansockClient,Databuf,Keylensend1,0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+                Keylensend2 |=0x80;////ssid len index is bit7
+
+		/*1 times*/
+		sendto(ScansockClient,Databuf,Keylensend2,0,(SOCKADDR*)&sockAdr,sizeof(SOCKADDR));
+
+  5、用户需要使用UDP广播的模式循环的发送以上信息。UDP广播的为本网段内地广播地址。地址统一为广播地址：比如局域网地址为192.168.1.X，则地址为192.168.1.255.
+       
+  6、模块不关系广播帧的具体内容，仅仅关系广播帧的长度。
+
+  7、在周期发送了一段时间后，请使用UDP配置模块的方式，查询模块是否已经联网成功。见UDP发送指令的格式.txt文件。
+
+                 
+
+   
