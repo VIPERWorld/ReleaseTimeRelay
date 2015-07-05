@@ -197,7 +197,10 @@ int TaskUsrtWifi(void)
 //    struct UsrtWifiAttribute UsrtWifiAttributeA[20];
     _SS
     //UsrtWifiGetFlash();
-    WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
+    WaitX(1000); 
+	Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
+	Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r"); //空指令
+	
     for (static int i = 0; i < 10; ++i)
     {
         WaitX(1000);
