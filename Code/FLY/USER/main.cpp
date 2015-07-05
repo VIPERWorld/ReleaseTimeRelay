@@ -188,7 +188,7 @@ enum UsrtWifiEcho
 //  }
 //}
 #define UARTWIFIUARTNUM USART1
-#define DEBUG_UARTNUM USART1
+#define DEBUG_UARTNUM USART2
 
 int TaskUsrtWifi(void)
 {
