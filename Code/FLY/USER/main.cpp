@@ -201,24 +201,24 @@ const char *ATCommandList[][3] = {
         "AT+SSID=2.4G",
     },
     {
-        "AT+ENCRY=?"
-        "OK=7"
-        "AT+ENCRY=7"
+        "AT+ENCRY=?",
+        "OK=7",
+        "AT+ENCRY=7",
     },
     {
-        "AT+KEY=?"
-        "OK=1,0,\"a7070318\""
-        "AT+KEY=1,0,\"a7070318\""
+        "AT+KEY=?",
+        "OK=1,0,\"a7070318\"",
+        "AT+KEY=1,0,\"a7070318\"",
     },
     {
-        "AT+NIP=?"
-        "OK=0"
-        "AT+NIP=0"
+        "AT+NIP=?",
+        "OK=0",
+        "AT+NIP=0",
     },
     {
-        "AT+ATM=?"
-        "OK=1"
-        "AT+ATM=1"
+        "AT+ATM=?",
+        "OK=1",
+        "AT+ATM=1",
     }
 };
 
