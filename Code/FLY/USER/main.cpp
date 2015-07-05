@@ -193,32 +193,32 @@ enum UsrtWifiEcho
 const char *ATCommandList[][3] = {
     {   "AT+WPRT=?",
         "OK=0",
-        "AT+WPRT=0",
+        "AT+WPRT=0"
     },
     {
         "AT+SSID=?",
         "OK=\"2.4G\"",
-        "AT+SSID=2.4G",
+        "AT+SSID=2.4G"
     },
     {
         "AT+ENCRY=?",
         "OK=7",
-        "AT+ENCRY=7",
+        "AT+ENCRY=7"
     },
     {
         "AT+KEY=?",
         "OK=1,0,\"a7070318\"",
-        "AT+KEY=1,0,\"a7070318\"",
+        "AT+KEY=1,0,\"a7070318\""
     },
     {
         "AT+NIP=?",
         "OK=0",
-        "AT+NIP=0",
+        "AT+NIP=0"
     },
     {
         "AT+ATM=?",
         "OK=1",
-        "AT+ATM=1",
+        "AT+ATM=1"
     }
 };
 
@@ -279,6 +279,7 @@ int TaskUsrtWifi(void)
                 static int i;
                 i = 0;
                 WaitX(1000);
+							UsrtWifiAtRxBuffer[0] = 0;
                 Sys_Printf(UARTWIFIUARTNUM, (char *)"%s\r", ATCommandList[i2][0]);
                 Sys_Printf(DEBUG_UARTNUM, (char *)"%s\r\n", ATCommandList[i2][0]);
                 for (; i < 5; ++i)
