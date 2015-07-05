@@ -202,6 +202,7 @@ int TaskUsrtWifi(void)
     {
         static int i;
         i = 0;
+			WaitX(1000);
         Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
         Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r\n"); //空指令
         for (; i < 10; ++i)
@@ -212,7 +213,6 @@ int TaskUsrtWifi(void)
             {
                 UsrtWifiAtRxBuffer[0] = 0;
                 Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
-
                 if (0 == strncmp((char*)"OK", (char*)(UsrtWifiAtRxBuffer + 1), 2))
                 {
                     breakflag = 1;
@@ -229,7 +229,6 @@ int TaskUsrtWifi(void)
                 break;
             }
         }
-
     }
 Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+ENTM\r");
     // //WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"+++"); //透明模式 逃逸
