@@ -200,27 +200,33 @@ int TaskUsrtWifi(void)
     WaitX(1000);
     for (static int i1 = 0; i1 < 2; i1++)
     {
-			static int i;
-			i=0;
+        static int i;
+        i = 0;
         Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
         Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r\n"); //空指令
         for (; i < 10; ++i)
         {
             WaitX(1000);
+            int breakflag = 0;
             if (0x00 != UsrtWifiAtRxBuffer[0])
-            {		
-								UsrtWifiAtRxBuffer[0]=0;
+            {
+                UsrtWifiAtRxBuffer[0] = 0;
                 Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
-							
-							if(strncmp((char*)"OK",(char*)(UsrtWifiAtRxBuffer + 1),2)==0)
-							{
-							}
+
+                if (0 == strncmp((char*)"OK", (char*)(UsrtWifiAtRxBuffer + 1), 2))
+                {
+                    breakflag = 1;
+                }
                 break;
             }
             if (9 == i)
             {
                 Sys_Printf(UARTWIFIUARTNUM, (char *)"+++");
                 Sys_Printf(DEBUG_UARTNUM, (char *)"+++\r\n");
+            }
+            if (1 == breakflag)
+            {
+                break;
             }
         }
 
