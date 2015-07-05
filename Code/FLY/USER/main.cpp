@@ -231,7 +231,7 @@ int TaskUsrtWifi(void)
         }
 
     }
-
+Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+ENTM\r");
     // //WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"+++"); //透明模式 逃逸
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+WPRT=0\r"); //0设置为对等网络STA
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SSID=2.4G\r"); //
