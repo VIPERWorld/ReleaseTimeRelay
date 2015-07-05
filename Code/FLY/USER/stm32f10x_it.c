@@ -31,14 +31,14 @@ void USART2_IRQHandler(void)  //串口中断函数
 {
     // ATK_Usart2_IQR();
     //SYS_UART_IQR(USART2);
-    SysUartTxIqr(USART1);
+    SysUartTxIqr(USART2);
     SysUart3RxIqr();
 }
 void USART3_IRQHandler(void)  //串口中断函数
 {
     //ATK_Usart3_IQR()
     //  SYS_UART_IQR(USART3);
-    SysUartTxIqr(USART1);
+    SysUartTxIqr(USART3);
     SysUart3RxIqr();
 }
 void DMA1_Channel1_IRQHandler(void)
