@@ -267,7 +267,7 @@ int TaskUsrtWifi(void)
             }
         }
     }
-    for (static int i2 = 0; i2 < 6; ++i2)
+    for (static int i2 = 2; i2 < 6; ++i2)
     {
 
         WaitX(1000);
