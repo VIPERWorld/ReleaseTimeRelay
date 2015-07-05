@@ -13,21 +13,33 @@
 //void (*TIM1_TRG_COM_IRQ)(void);
 //void (*TIM1_CC_IRQ)(void);
 extern void SYS_UART_IQR(USART_TypeDef *USARTx);
+extern void SysUartTxIqr(USART_TypeDef *USARTx);
+extern void SysUart1RxIqr(void);
+extern void SysUart2RxIqr(void);
+extern void SysUart3RxIqr(void);
+
+
+
 void USART1_IRQHandler(void)  //串口中断函数
 {
     // ATK_Usart1_IQR();
-    SYS_UART_IQR(USART1);
-
+    //SYS_UART_IQR(USART1);
+    SysUartTxIqr(USART1);
+    SysUart1RxIqr();
 }
 void USART2_IRQHandler(void)  //串口中断函数
 {
     // ATK_Usart2_IQR();
-    SYS_UART_IQR(USART2);
+    //SYS_UART_IQR(USART2);
+    SysUartTxIqr(USART1);
+    SysUart3RxIqr();
 }
 void USART3_IRQHandler(void)  //串口中断函数
 {
     //ATK_Usart3_IQR()
-    SYS_UART_IQR(USART3);
+    //  SYS_UART_IQR(USART3);
+    SysUartTxIqr(USART1);
+    SysUart3RxIqr();
 }
 void DMA1_Channel1_IRQHandler(void)
 {
