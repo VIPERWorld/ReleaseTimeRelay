@@ -198,7 +198,7 @@ int TaskUsrtWifi(void)
     _SS
     //UsrtWifiGetFlash();
     WaitX(1000);
-    for (static int i1 = 0; i1 < 2; i1++)
+    for (static int i1 = 0; i1 < 10; i1++)
     {
         static int i;
         i = 0;
