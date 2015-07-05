@@ -275,7 +275,7 @@ int main(void)
     /***总循环***/
     while (1)
     {
-        RunTaskA(task_led, 0);
+        //RunTaskA(task_led, 0);
         //RunTaskA(task_rtc, 1);
       //  RunTaskA(TaskRelay, 2);
 			  //RunTaskA(TaskUsrtWifi, 3);
