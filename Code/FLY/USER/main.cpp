@@ -189,37 +189,53 @@ enum UsrtWifiEcho
 //}
 #define UARTWIFIUARTNUM USART1
 #define DEBUG_UARTNUM USART2
-
-const char *ATCommandList[][3] = {
-    {   "AT+WPRT=?",
+#define CONFIGSUMNUM 4
+const char *ATCommandList[CONFIGSUMNUM][3] = {
+    {   "AT+WPRT=?",//网络类型
         "OK=0",
         "AT+WPRT=0"
     },
+//    {
+//        "AT+SSID=?",
+//        "OK=\"2.4G\"",
+//        "AT+SSID=2.4G"
+//    },
+//    {
+//        "AT+ENCRY=?",
+//        "OK=7",
+//        "AT+ENCRY=7"
+//    },
+//    {
+//        "AT+KEY=?",
+//        "OK=1,0,\"a7070318\"",
+//        "AT+KEY=1,0,\"a7070318\""
+//    },
     {
-        "AT+SSID=?",
-        "OK=\"2.4G\"",
-        "AT+SSID=2.4G"
-    },
-    {
-        "AT+ENCRY=?",
-        "OK=7",
-        "AT+ENCRY=7"
-    },
-    {
-        "AT+KEY=?",
-        "OK=1,0,\"a7070318\"",
-        "AT+KEY=1,0,\"a7070318\""
-    },
-    {
-        "AT+NIP=?",
+			"AT+NIP=?",//设置为DHCP自动获取IP
         "OK=0",
         "AT+NIP=0"
     },
     {
-        "AT+ATM=?",
+			 "AT+ATM=?",//1设置为手动 0 自动
         "OK=1",
         "AT+ATM=1"
-    }
+    },
+		{
+			"AT+ATRM=?",
+			"OK=0,0,\"192.168.1.116\",4001",
+			"AT+ATRM=0,0,\"192.168.1.116\",4001"
+		}
+//		，
+//		{
+//		AT+PMTF
+//		AT+Z
+//		{
+//			"AT+RSTF",//恢复出厂
+//			"AT+Z",//复位
+//		}
+//		手机设置SSID
+//		密码
+//		加密方式
 };
 
 int TaskUsrtWifi(void)
@@ -228,8 +244,6 @@ int TaskUsrtWifi(void)
 //    u8 RxTmpA[20];
 //    struct UsrtWifiAttribute UsrtWifiAttributeA[20];
     _SS
-    //UsrtWifiGetFlash();
-
     WaitX(1000);
     {
         int breakflag;
@@ -267,9 +281,8 @@ int TaskUsrtWifi(void)
             }
         }
     }
-    for (static int i2 = 2; i2 < 6; ++i2)
+    for (static int i2 = 2; i2 < CONFIGSUMNUM; ++i2)
     {
-
         WaitX(1000);
         {
             int breakflag;
