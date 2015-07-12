@@ -26,8 +26,8 @@ void SYS_INIT(void)
     uart_init (115200);
     uart2_init(115200);
     //uart3_init(115200);
-    Sys_Printf(USART1, (char *)"USART1 okhghg");
-    Sys_Printf(USART2, (char *)"USART2 okrth5");
+    Sys_Printf(USART1, (char *)"USART1 okhghg\r\n");
+    Sys_Printf(USART2, (char *)"USART2 okrth5\r\n");
     //Sys_Printf(USART3, (char *)"USART3 okewtr");
     delay_ms(100);
 }
@@ -188,7 +188,55 @@ enum UsrtWifiEcho
 //  }
 //}
 #define UARTWIFIUARTNUM USART1
-#define DEBUG_UARTNUM USART1
+#define DEBUG_UARTNUM USART2
+#define CONFIGSUMNUM 4
+const char *ATCommandList[CONFIGSUMNUM][3] = {
+    {   "AT+WPRT=?",//网络类型
+        "OK=0",
+        "AT+WPRT=0"
+    },
+//    {
+//        "AT+SSID=?",
+//        "OK=\"2.4G\"",
+//        "AT+SSID=2.4G"
+//    },
+//    {
+//        "AT+ENCRY=?",
+//        "OK=7",
+//        "AT+ENCRY=7"
+//    },
+//    {
+//        "AT+KEY=?",
+//        "OK=1,0,\"a7070318\"",
+//        "AT+KEY=1,0,\"a7070318\""
+//    },
+    {
+			"AT+NIP=?",//设置为DHCP自动获取IP
+        "OK=0",
+        "AT+NIP=0"
+    },
+    {
+			 "AT+ATM=?",//1设置为手动 0 自动
+        "OK=1",
+        "AT+ATM=1"
+    },
+		{
+			"AT+ATRM=?",
+			"OK=0,0,\"192.168.1.116\",4001",
+			"AT+ATRM=0,0,\"192.168.1.116\",4001"
+		}
+//		，
+//		{
+//		AT+PMTF
+//		AT+Z
+//		{
+//			"AT+RSTF",//恢复出厂
+//			"AT+Z",//复位
+//		}
+//		手机设置SSID
+//		密码
+//		加密方式
+};
 
 int TaskUsrtWifi(void)
 {
@@ -196,23 +244,82 @@ int TaskUsrtWifi(void)
 //    u8 RxTmpA[20];
 //    struct UsrtWifiAttribute UsrtWifiAttributeA[20];
     _SS
-    //UsrtWifiGetFlash();
-    WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
-    for (static int i = 0; i < 10; ++i)
+    WaitX(1000);
     {
-        WaitX(1000);
-        if (0x01 == UsrtWifiAtRxBuffer[0])
+        int breakflag;
+        breakflag = 0;
+        for (static int i1 = 0; i1 < 10; i1++)//退出透明传输模式
         {
-            Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
-            break;
-        }
-        if (9 == i)
-        {
-            Sys_Printf(UARTWIFIUARTNUM, (char *)"+++");
+            static int i;
+            i = 0;
+            WaitX(1000);
+            Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+\r"); //空指令
+            Sys_Printf(DEBUG_UARTNUM, (char *)"AT+\r\n"); //空指令
+            for (; i < 5; ++i)
+            {
+                WaitX(1000);
+                if (0x00 != UsrtWifiAtRxBuffer[0])
+                {
+                    UsrtWifiAtRxBuffer[0] = 0;
+                    Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
+                    if (0 == strncmp((char*)"OK", (char*)(UsrtWifiAtRxBuffer + 1), 2))
+                    {
+                        breakflag = 1;
+                    }
+                    break;
+                }
+                if (4 == i)
+                {
+                    Sys_Printf(UARTWIFIUARTNUM, (char *)"+++");
+                    Sys_Printf(DEBUG_UARTNUM, (char *)"+++\r\n");
+                }
+
+            }
+            if (1 == breakflag)
+            {
+                break;
+            }
         }
     }
-
-    // //WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"+++"); //透明模式 逃逸
+    for (static int i2 = 2; i2 < CONFIGSUMNUM; ++i2)
+    {
+        WaitX(1000);
+        {
+            int breakflag;
+            breakflag = 0;
+            for (static int i1 = 0; i1 < 10; i1++)
+            {
+                static int i;
+                i = 0;
+                WaitX(1000);
+							UsrtWifiAtRxBuffer[0] = 0;
+                Sys_Printf(UARTWIFIUARTNUM, (char *)"%s\r", ATCommandList[i2][0]);
+                Sys_Printf(DEBUG_UARTNUM, (char *)"%s\r\n", ATCommandList[i2][0]);
+                for (; i < 5; ++i)
+                {
+                    WaitX(1000);
+                    if (0x00 != UsrtWifiAtRxBuffer[0])
+                    {
+                        UsrtWifiAtRxBuffer[0] = 0;
+                        Sys_Printf(DEBUG_UARTNUM, (char *)"%s", (UsrtWifiAtRxBuffer + 1));
+                        if (0 == strncmp(ATCommandList[i2][1], (char*)(UsrtWifiAtRxBuffer + 1), strlen(ATCommandList[i2][1])))
+                        {
+                            breakflag = 1;
+                        }
+                        else
+                        {
+                            Sys_Printf(UARTWIFIUARTNUM, (char *)"%s\r", ATCommandList[i2][2]); //0设置为对等网络STA
+                        }
+                        break;
+                    }
+                }
+                if (1 == breakflag)
+                {
+                    break;
+                }
+            }
+        }
+    }
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+WPRT=0\r"); //0设置为对等网络STA
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SSID=2.4G\r"); //
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+ENCRY=7\r"); //加密为WPA2
@@ -222,7 +329,7 @@ int TaskUsrtWifi(void)
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+PMTF\r"); //存到FLASH
     // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+Z\r"); //复位
 
-    // WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKCT=0,0,192.168.1.116,4001\r"); //建立SOCKET
+    WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKCT=0,0,192.168.1.116,4001\r"); //建立SOCKET
     // /* WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKSTT=1\r"); //查询SOCKET 1
     //    WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+SKCLS=1\r"); //删除SOCKET
     //  */
@@ -262,7 +369,8 @@ int TaskUsrtWifi(void)
     // BuildSocket();
     // CheckSocket();
     // SetSysDefaultSocket();
-    // UsrtWifiENTM();//进入串口透明传输模式
+    Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+ENTM\r");
+
     while (1)
     {
         WaitX(200);
@@ -277,6 +385,8 @@ int main(void)
     {
         RunTaskA(task_led, 0);
         //RunTaskA(task_rtc, 1);
-        RunTaskA(TaskRelay, 2);
+        //  RunTaskA(TaskRelay, 2);
+        RunTaskA(TaskUsrtWifi, 3);
+
     }
 }
