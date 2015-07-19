@@ -14,7 +14,10 @@ USART2|  A2  A3  |   (D5  D6)   |           |
 USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
       |          | (64 100 144) | (100 144) |
 *********************************************/
-//#define DEBUG_USART USART1
+
+#define UARTWIFIUARTNUM   USART3 //WIFI
+#define DEBUG_UARTNUM     USART2 //DEBUG
+#define USARTSCREEN       USART1 //串口屏
 
 #define EN_USART_  (1)       //Enable(1)/Disable(0)
 #define EN_USART2_ (0)       //Enable(1)/Disable(0)

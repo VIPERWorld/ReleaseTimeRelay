@@ -1,24 +1,66 @@
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f10x_it.h"
 #include "G32_timer_cap.h"
-//void (*TIM1_IRQ)(void);
-//void (*TIM2_IRQ)(void);
-//void (*TIM3_IRQ)(void);
-//void (*TIM4_IRQ)(void);
-//void (*TIM5_IRQ)(void);
-//void (*TIM6_IRQ)(void);
-//void (*TIM7_IRQ)(void);
-//void (*TIM1_BRK_IRQ)(void);
-//void (*TIM1_UP_IRQ)(void);
-//void (*TIM1_TRG_COM_IRQ)(void);
-//void (*TIM1_CC_IRQ)(void);
 extern void SYS_UART_IQR(USART_TypeDef *USARTx);
 extern void SysUartTxIqr(USART_TypeDef *USARTx);
 extern void SysUart1RxIqr(void);
 extern void SysUart2RxIqr(void);
 extern void SysUart3RxIqr(void);
 
+#include "data_transfer.h"
+#define AbsoluteOpticalEncoder_VALMax 360
+#define AbsoluteOpticalEncoder_VALMin 0
 
+void EXTI4_IRQHandler(void)
+{
+    if (EXTI_GetITStatus(EXTI_Line0) != RESET)
+    {
+        AbsoluteOpticalEncoder_VAL = 0;
+        // Clear the EXTI Line 4
+        EXTI_ClearITPendingBit(EXTI_Line4);
+    }
+}
+void EXTI9_5_IRQChannel(void)
+{
+    if (EXTI_GetITStatus(EXTI_Line5) != RESET)
+    {
+        // Clear the EXTI Line 5
+        EXTI_ClearITPendingBit(EXTI_Line5);
+    }
+    else if (EXTI_GetITStatus(EXTI_Line6) != RESET)
+    {
+        ++AbsoluteOpticalEncoder_VAL;
+        if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
+        {
+            AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
+        }
+
+        // Clear the EXTI Line 6
+        EXTI_ClearITPendingBit(EXTI_Line6);
+    }
+    else if (EXTI_GetITStatus(EXTI_Line7) != RESET)
+    {
+        --AbsoluteOpticalEncoder_VAL;
+        if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
+        {
+            AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
+        }
+        // Clear the EXTI Line 7
+        EXTI_ClearITPendingBit(EXTI_Line7);
+    }
+    else if (EXTI_GetITStatus(EXTI_Line8) != RESET)
+    {
+
+        // Clear the EXTI Line 8
+        EXTI_ClearITPendingBit(EXTI_Line8);
+    }
+    else if (EXTI_GetITStatus(EXTI_Line9) != RESET)
+    {
+
+        // Clear the EXTI Line 9
+        EXTI_ClearITPendingBit(EXTI_Line9);
+    }
+}
 
 void USART1_IRQHandler(void)  //串口中断函数
 {
