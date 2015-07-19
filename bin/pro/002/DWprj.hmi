@@ -1,0 +1,13 @@
+[INIT]
+PICFIX=1
+VARCount=64
+SCREENDSIZE=800X480
+SPADDRESS=5000
+[CMD]
+CMD0=0000=
+[IMG]
+00=00_Welcome.bmp
+01=01_数据键盘.bmp
+02=02_参数设置.bmp
+03=03_WIFI配置.bmp
+04=04_WIFI配置2.bmp
