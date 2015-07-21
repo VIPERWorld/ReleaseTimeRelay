@@ -119,7 +119,7 @@ void RelayControlOff(void)
 #include "EXTI.h"
 int TaskRelay(void)
 {
-    _SS	
+    _SS
     PC9_OUT;
     PC8_OUT;
     PC7_OUT;
@@ -137,10 +137,24 @@ int TaskRelay(void)
     RELAY5_ON;
     RELAY6_ON;
     RELAY7_ON;
-    EXTI_Configuration(GPIOC, GPIO_Pin_4, 0);      // 表示作为外部中断 下降沿触发
+    EXTI_Configuration(GPIOD, GPIO_Pin_2, 0);      // 表示作为外部中断 下降沿触发
     EXTI_Configuration(GPIOC, GPIO_Pin_5, 0);      // 表示作为外部中断 下降沿触发
     EXTI_Configuration(GPIOA, GPIO_Pin_7, 0);      // 表示作为外部中断 下降沿触发
-    EXTI_Configuration(GPIOA, GPIO_Pin_6, 0);      // 表示作为外部中断 下降沿触发
+//    EXTI_Configuration(GPIOA, GPIO_Pin_6, 0);      // 表示作为外部中断 下降沿触发
+		//EXTI_Configuration(GPIOB,GPIO_Pin_0,0);
+//EXTI_NVIC_Configuration(0,2,1,1);
+EXTI_NVIC_Configuration(2,2,1,1);
+EXTI_NVIC_Configuration(5,2,1,1);
+//EXTI_NVIC_Configuration(6,2,1,1);
+EXTI_NVIC_Configuration(7,2,1,1);
+
+			Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
+
+//    Set_C4;
+//    Set_C5;
+//    Set_A7;
+//    Set_A6;
+
 
     while (1)
     {
@@ -167,7 +181,7 @@ int TaskRelay(void)
                     //Sys_Printf(DEBUG_UARTNUM, "%d ", AbsoluteOpticalEncoder_Apart[i][0]);
                     //Sys_Printf(DEBUG_UARTNUM, "%d ", AbsoluteOpticalEncoder_Apart[i][1]);
                 }
-                Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
+                //Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
                 //Sys_Printf(DEBUG_UARTNUM, "\r\nRelayStata:%d %d %d %d %d %d", RelayStata[0], RelayStata[1], RelayStata[2], RelayStata[3], RelayStata[4], RelayStata[5], RelayStata[6]);
             }
             RelayControl();
@@ -448,10 +462,9 @@ int main(void)
     /***总循环***/
     while (1)
     {
-        RunTaskA(task_led, 0);
+        //RunTaskA(task_led, 0);
         RunTaskA(task_rtc, 1);
         RunTaskA(TaskRelay, 2);
-        RunTaskA(TaskUsrtWifi, 3);
-
+        //RunTaskA(TaskUsrtWifi, 3);
     }
 }

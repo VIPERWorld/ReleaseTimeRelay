@@ -16,7 +16,7 @@ extern _Uu32u8 TimeUnlock;
 extern int TimeUnlockFlag;
 extern u8 RelayStata[AbsoluteOpticalEncoderNUM];
 extern int AbsoluteOpticalEncoder_VAL;//绝对式光电编码器
-extern u16 AbsoluteOpticalEncoder_LastVAL;//绝对式光电编码器
+extern s16 AbsoluteOpticalEncoder_LastVAL;//绝对式光电编码器
 extern u16 AbsoluteOpticalEncoder_Apart[][2];//继电器阈值
 extern int TimeUnlockFlag;
 extern int WifiConfigFlag;

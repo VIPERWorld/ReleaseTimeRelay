@@ -11,20 +11,58 @@ extern void SysUart3RxIqr(void);
 #define AbsoluteOpticalEncoder_VALMax 360
 #define AbsoluteOpticalEncoder_VALMin 0
 
-void EXTI4_IRQHandler(void)
+#include "bak.h"
+#include "usr_usart.h"
+//void EXTI0_IRQHandler(void)
+//{   //Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
+
+//    if (EXTI_GetITStatus(EXTI_Line0) != RESET)
+//    {
+//        Sys_Printf(DEBUG_UARTNUM, "\r\n0", AbsoluteOpticalEncoder_VAL);
+//        // Clear the EXTI Line 0
+//        EXTI_ClearITPendingBit(EXTI_Line0);
+//    }
+//}
+//void EXTI1_IRQHandler(void)
+//{   //Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
+
+//    if (EXTI_GetITStatus(EXTI_Line1) != RESET)
+//    {
+//        Sys_Printf(DEBUG_UARTNUM, "\r\n1", AbsoluteOpticalEncoder_VAL);
+//        // Clear the EXTI Line 1
+//        EXTI_ClearITPendingBit(EXTI_Line1);
+//    }
+//}
+void EXTI2_IRQHandler(void)
 {
-    if (EXTI_GetITStatus(EXTI_Line0) != RESET)
+    if (EXTI_GetITStatus(EXTI_Line2) != RESET)
     {
-        AbsoluteOpticalEncoder_VAL = 0;
-        // Clear the EXTI Line 4
-        EXTI_ClearITPendingBit(EXTI_Line4);
+        Sys_Printf(DEBUG_UARTNUM, "\r\n2VAL:%d", AbsoluteOpticalEncoder_VAL);
+        EXTI_ClearITPendingBit(EXTI_Line2);
     }
 }
-void EXTI9_5_IRQChannel(void)
+//void EXTI3_IRQHandler(void)
+//{
+//    if (EXTI_GetITStatus(EXTI_Line3) != RESET)
+//    {
+//        Sys_Printf(DEBUG_UARTNUM, "\r\n3", AbsoluteOpticalEncoder_VAL);
+//        // Clear the EXTI Line 3
+//        EXTI_ClearITPendingBit(EXTI_Line3);
+//    }
+//}
+//void EXTI4_IRQHandler(void)
+//{
+//    if (EXTI_GetITStatus(EXTI_Line4) != RESET)
+//    {
+//        Sys_Printf(DEBUG_UARTNUM, "\r\n4VAL:%d", AbsoluteOpticalEncoder_VAL);
+//        EXTI_ClearITPendingBit(EXTI_Line4);
+//    }
+//}
+void EXTI9_5_IRQHandler(void)
 {
     if (EXTI_GetITStatus(EXTI_Line5) != RESET)
     {
-        // Clear the EXTI Line 5
+        Sys_Printf(DEBUG_UARTNUM, "\r\n5VAL:%d", AbsoluteOpticalEncoder_VAL);
         EXTI_ClearITPendingBit(EXTI_Line5);
     }
     else if (EXTI_GetITStatus(EXTI_Line6) != RESET)
@@ -34,8 +72,8 @@ void EXTI9_5_IRQChannel(void)
         {
             AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
         }
-
-        // Clear the EXTI Line 6
+        Data_Save(1);
+        Sys_Printf(DEBUG_UARTNUM, "\r\n6VAL:%d", AbsoluteOpticalEncoder_VAL);
         EXTI_ClearITPendingBit(EXTI_Line6);
     }
     else if (EXTI_GetITStatus(EXTI_Line7) != RESET)
@@ -45,19 +83,16 @@ void EXTI9_5_IRQChannel(void)
         {
             AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
         }
-        // Clear the EXTI Line 7
+        Data_Save(1);
+        Sys_Printf(DEBUG_UARTNUM, "\r\n7VAL:%d", AbsoluteOpticalEncoder_VAL);
         EXTI_ClearITPendingBit(EXTI_Line7);
     }
     else if (EXTI_GetITStatus(EXTI_Line8) != RESET)
     {
-
-        // Clear the EXTI Line 8
         EXTI_ClearITPendingBit(EXTI_Line8);
     }
     else if (EXTI_GetITStatus(EXTI_Line9) != RESET)
     {
-
-        // Clear the EXTI Line 9
         EXTI_ClearITPendingBit(EXTI_Line9);
     }
 }

@@ -19,7 +19,7 @@
 //struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
 int AbsoluteOpticalEncoder_VAL     = 0;//绝对式光电编码器
-u16 AbsoluteOpticalEncoder_LastVAL = 0;//绝对式光电编码器
+s16 AbsoluteOpticalEncoder_LastVAL = 0;//绝对式光电编码器
 u8 RelayStata[AbsoluteOpticalEncoderNUM] = {0}; //继电器状态
 _Uu32u8 TimeUnlock;//锁定时间
 int TimeUnlockFlag = 0;// 时间解锁标志
