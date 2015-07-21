@@ -38,6 +38,7 @@ void SYS_INIT(void)
 u16 task_rtc(void)
 {
     _SS
+		TimeUnlock.u32=0x7fffffff;
     if (RTC_Init() == 0)
     {
         Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC ok");
@@ -61,7 +62,6 @@ u16 task_rtc(void)
                     + calendar.hour) * 100
                    + calendar.min);
         //Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC: %d %s", tmp, time);
-
         if (tmp < TimeUnlock.u32)
         {
             TimeUnlockFlag = 1;
@@ -138,33 +138,25 @@ int TaskRelay(void)
     RELAY6_ON;
     RELAY7_ON;
     EXTI_Configuration(GPIOD, GPIO_Pin_2, 0);      // 表示作为外部中断 下降沿触发
+    //EXTI_Configuration(GPIOB, GPIO_Pin_3, 0);    // 表示作为外部中断 下降沿触发
     EXTI_Configuration(GPIOC, GPIO_Pin_5, 0);      // 表示作为外部中断 下降沿触发
     EXTI_Configuration(GPIOA, GPIO_Pin_7, 0);      // 表示作为外部中断 下降沿触发
-//    EXTI_Configuration(GPIOA, GPIO_Pin_6, 0);      // 表示作为外部中断 下降沿触发
-		//EXTI_Configuration(GPIOB,GPIO_Pin_0,0);
-//EXTI_NVIC_Configuration(0,2,1,1);
-EXTI_NVIC_Configuration(2,2,1,1);
-EXTI_NVIC_Configuration(5,2,1,1);
-//EXTI_NVIC_Configuration(6,2,1,1);
-EXTI_NVIC_Configuration(7,2,1,1);
+    EXTI_NVIC_Configuration(2, 2, 0, 0);
+    //EXTI_NVIC_Configuration(3,2,1,1);
+    EXTI_NVIC_Configuration(5, 2, 0, 0);
+    EXTI_NVIC_Configuration(7, 2, 0, 0);
 
-			Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
-
-//    Set_C4;
-//    Set_C5;
-//    Set_A7;
-//    Set_A6;
-
+    Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
 
     while (1)
     {
-        WaitX(2000);
+        WaitX(10);
         if (TimeUnlockFlag)
         {
             //if (AbsoluteOpticalEncoder_VAL != AbsoluteOpticalEncoder_LastVAL)
             {
                 //AbsoluteOpticalEncoder_LastVAL = AbsoluteOpticalEncoder_VAL;
-                Sys_Printf(DEBUG_UARTNUM, "\r\n");
+                //Sys_Printf(DEBUG_UARTNUM, "\r\n");
                 for (int i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
                 {
                     if (
@@ -465,6 +457,6 @@ int main(void)
         //RunTaskA(task_led, 0);
         RunTaskA(task_rtc, 1);
         RunTaskA(TaskRelay, 2);
-        //RunTaskA(TaskUsrtWifi, 3);
+        RunTaskA(TaskUsrtWifi, 3);
     }
 }

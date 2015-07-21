@@ -51,6 +51,9 @@ void Data_Save(u8 select)
         BKP_WriteBackupRegister(BKP_DR16, (u16)(AbsoluteOpticalEncoder_Apart[6][1]));
         BKP_WriteBackupRegister(BKP_DR17, (u16)(AbsoluteOpticalEncoder_Apart[7][1]));
         break;
+		case 3:
+        BKP_WriteBackupRegister(BKP_DR18, (u16)(TimeUnlock.u16[0]));
+        BKP_WriteBackupRegister(BKP_DR19, (u16)(TimeUnlock.u16[1]));
     }
     BKP_WriteBackupRegister(BKP_DR20, 1);
 		return;
@@ -74,6 +77,8 @@ u16 Data_Read(void)
     AbsoluteOpticalEncoder_Apart[5][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR15)));
     AbsoluteOpticalEncoder_Apart[6][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR16)));
     AbsoluteOpticalEncoder_Apart[7][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR17)));
+	  TimeUnlock.u16[0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR18)));
+    TimeUnlock.u16[1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR19)));
     return BKP_ReadBackupRegister(BKP_DR20);
 };
 

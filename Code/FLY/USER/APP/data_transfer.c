@@ -74,6 +74,7 @@ void Ex_Anl(u8 *data_buf)
             TimeUnlock.u8[2] = *(data_buf + 6);
             TimeUnlock.u8[3] = *(data_buf + 7);
         }
+				Data_Save(3);
         Sys_Printf(DEBUG_UARTNUM, "\r\nTimeUnlock:%d", TimeUnlock.u32);
         break;
     }

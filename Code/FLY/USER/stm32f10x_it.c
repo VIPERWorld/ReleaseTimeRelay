@@ -33,31 +33,37 @@ extern void SysUart3RxIqr(void);
 //        EXTI_ClearITPendingBit(EXTI_Line1);
 //    }
 //}
+#include "minos_delay.h"
+#include "gpio.h"
+
+//static u32 lasttime = 0;
+
 void EXTI2_IRQHandler(void)
 {
     if (EXTI_GetITStatus(EXTI_Line2) != RESET)
-    {
-        Sys_Printf(DEBUG_UARTNUM, "\r\n2VAL:%d", AbsoluteOpticalEncoder_VAL);
+    {//(SysTick_Clock() - lasttime) > 30&&
+        if ((0==A7))
+        {
+            //lasttime = SysTick_Clock();
+            ++AbsoluteOpticalEncoder_VAL;
+            if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
+            {
+                AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
+            }
+            Data_Save(1);
+            //Sys_Printf(DEBUG_UARTNUM, "\r\n2VAL:%d", AbsoluteOpticalEncoder_VAL);
+        }
         EXTI_ClearITPendingBit(EXTI_Line2);
     }
 }
-//void EXTI3_IRQHandler(void)
-//{
-//    if (EXTI_GetITStatus(EXTI_Line3) != RESET)
-//    {
-//        Sys_Printf(DEBUG_UARTNUM, "\r\n3", AbsoluteOpticalEncoder_VAL);
-//        // Clear the EXTI Line 3
-//        EXTI_ClearITPendingBit(EXTI_Line3);
-//    }
-//}
-//void EXTI4_IRQHandler(void)
-//{
-//    if (EXTI_GetITStatus(EXTI_Line4) != RESET)
-//    {
-//        Sys_Printf(DEBUG_UARTNUM, "\r\n4VAL:%d", AbsoluteOpticalEncoder_VAL);
-//        EXTI_ClearITPendingBit(EXTI_Line4);
-//    }
-//}
+void EXTI3_IRQHandler(void)
+{
+    if (EXTI_GetITStatus(EXTI_Line3) != RESET)
+    {
+        Sys_Printf(DEBUG_UARTNUM, "\r\n3VAL:%d", AbsoluteOpticalEncoder_VAL);
+        EXTI_ClearITPendingBit(EXTI_Line3);
+    }
+}
 void EXTI9_5_IRQHandler(void)
 {
     if (EXTI_GetITStatus(EXTI_Line5) != RESET)
@@ -67,24 +73,21 @@ void EXTI9_5_IRQHandler(void)
     }
     else if (EXTI_GetITStatus(EXTI_Line6) != RESET)
     {
-        ++AbsoluteOpticalEncoder_VAL;
-        if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
-        {
-            AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
-        }
-        Data_Save(1);
-        Sys_Printf(DEBUG_UARTNUM, "\r\n6VAL:%d", AbsoluteOpticalEncoder_VAL);
         EXTI_ClearITPendingBit(EXTI_Line6);
     }
     else if (EXTI_GetITStatus(EXTI_Line7) != RESET)
-    {
-        --AbsoluteOpticalEncoder_VAL;
-        if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
+    {//(SysTick_Clock() - lasttime) > 30&&
+        if ((0==D2))
         {
-            AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
+            //lasttime = SysTick_Clock();
+            --AbsoluteOpticalEncoder_VAL;
+            if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
+            {
+                AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
+            }
+            Data_Save(1);
+            //Sys_Printf(DEBUG_UARTNUM, "\r\n7VAL:%d", AbsoluteOpticalEncoder_VAL);
         }
-        Data_Save(1);
-        Sys_Printf(DEBUG_UARTNUM, "\r\n7VAL:%d", AbsoluteOpticalEncoder_VAL);
         EXTI_ClearITPendingBit(EXTI_Line7);
     }
     else if (EXTI_GetITStatus(EXTI_Line8) != RESET)

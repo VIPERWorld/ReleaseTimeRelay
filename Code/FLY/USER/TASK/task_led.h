@@ -9,12 +9,17 @@
 int task_led(void)
 {
     _SS
-    LED1_Init;
-    LED1_H;
+//    LED1_Init;
+//    LED1_H;
     while (1)
     {
-            WaitX(200);
-            LED1_Toggle;
+            WaitX(1000);
+            //LED1_Toggle;
+						static u32 currenttime = 0;
+						u32 lasttime = 0;
+						lasttime=currenttime;
+            currenttime=SysTick_Clock();
+						Sys_Printf(DEBUG_UARTNUM, "\r\n%d",currenttime-lasttime);
     }
     _EE
 }

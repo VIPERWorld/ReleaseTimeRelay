@@ -10,6 +10,7 @@ extern "C" {
 typedef union
 {
 	u8 u8[4];
+	u16 u16[2];
 	u32 u32;
 } _Uu32u8; //Ëø¶¨Ê±¼ä
 extern _Uu32u8 TimeUnlock;
