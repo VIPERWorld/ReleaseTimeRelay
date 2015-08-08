@@ -167,11 +167,13 @@ int TaskRelay(void)
 	RELAY9_ON;
 	RELAY10_ON;
 
+WaitX(1000);
+WaitX(1000);
 
 	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_AFIO, ENABLE ); GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 	EXTI_Configuration(GPIOB, GPIO_Pin_6, 0);// 表示作为外部中断 0下降沿触发
 	EXTI_Configuration(GPIOB, GPIO_Pin_7, 0);// 表示作为外部中断 0下降沿触发
-	EXTI_Configuration(GPIOB, GPIO_Pin_8, 0);// 表示作为外部中断 0下降沿触发
+	EXTI_Configuration(GPIOB, GPIO_Pin_8, 1);// 表示作为外部中断 0下降沿触发 1上升沿
 	EXTI_Configuration(GPIOB, GPIO_Pin_9, 2);// 表示作为外部中断 2上升和下降沿触发
 	EXTI_NVIC_Configuration(6, 2, 0, 0);//-
 	EXTI_NVIC_Configuration(7, 2, 1, 1);//+

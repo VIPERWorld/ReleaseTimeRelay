@@ -53,8 +53,11 @@ void AbsoluteOpticalEncoderInOut2(void)//B7
 }
 void AbsoluteOpticalEncoderInOut3(void)//B8
 {
-	AbsoluteOpticalEncoder_VAL = 0;
+	if(1==B7)
+	{
+	AbsoluteOpticalEncoder_VAL = 1;
 	Data_Save(1);	
+	}
 }
 
 //void EXTI0_IRQHandler(void)
