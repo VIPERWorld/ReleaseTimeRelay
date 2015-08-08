@@ -13,6 +13,50 @@ extern void SysUart3RxIqr(void);
 
 #include "bak.h"
 #include "usr_usart.h"
+#include "minos_delay.h"
+#include "gpio.h"
+
+void guandian()//B9
+{
+	if (1 == B9)
+	{
+		RELAY10_OFF;
+	}
+	else
+	{
+		RELAY10_ON;
+	}
+}
+void AbsoluteOpticalEncoderInOut1(void)//B6
+{
+	if ((0 == B7))
+	{
+		++AbsoluteOpticalEncoder_VAL;
+		if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
+		{
+			AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
+		}
+		Data_Save(1);
+	}
+}
+void AbsoluteOpticalEncoderInOut2(void)//B7
+{
+	if ((0 == B6))
+	{
+		--AbsoluteOpticalEncoder_VAL;
+		if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
+		{
+			AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
+		}
+		Data_Save(1);
+	}
+}
+void AbsoluteOpticalEncoderInOut3(void)//B8
+{
+	AbsoluteOpticalEncoder_VAL = 0;
+	Data_Save(1);	
+}
+
 //void EXTI0_IRQHandler(void)
 //{   //Sys_Printf(DEBUG_UARTNUM, "\r\nVAL:%d", AbsoluteOpticalEncoder_VAL);
 
@@ -33,190 +77,165 @@ extern void SysUart3RxIqr(void);
 //        EXTI_ClearITPendingBit(EXTI_Line1);
 //    }
 //}
-#include "minos_delay.h"
-#include "gpio.h"
-
-//static u32 lasttime = 0;
-
 void EXTI2_IRQHandler(void)
 {
-    if (EXTI_GetITStatus(EXTI_Line2) != RESET)
-    {//(SysTick_Clock() - lasttime) > 30&&
-        if ((0==A7))
-        {
-            //lasttime = SysTick_Clock();
-            ++AbsoluteOpticalEncoder_VAL;
-            if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
-            {
-                AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
-            }
-            Data_Save(1);
-            //Sys_Printf(DEBUG_UARTNUM, "\r\n2VAL:%d", AbsoluteOpticalEncoder_VAL);
-        }
-        EXTI_ClearITPendingBit(EXTI_Line2);
-    }
+	if (EXTI_GetITStatus(EXTI_Line2) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line2);
+	}
 }
 void EXTI3_IRQHandler(void)
 {
-    if (EXTI_GetITStatus(EXTI_Line3) != RESET)
-    {
-        Sys_Printf(DEBUG_UARTNUM, "\r\n3VAL:%d", AbsoluteOpticalEncoder_VAL);
-        EXTI_ClearITPendingBit(EXTI_Line3);
-    }
+	if (EXTI_GetITStatus(EXTI_Line3) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line3);
+	}
 }
 void EXTI9_5_IRQHandler(void)
 {
-    if (EXTI_GetITStatus(EXTI_Line5) != RESET)
-    {
-        Sys_Printf(DEBUG_UARTNUM, "\r\n5VAL:%d", AbsoluteOpticalEncoder_VAL);
-        EXTI_ClearITPendingBit(EXTI_Line5);
-    }
-    else if (EXTI_GetITStatus(EXTI_Line6) != RESET)
-    {
-        EXTI_ClearITPendingBit(EXTI_Line6);
-    }
-    else if (EXTI_GetITStatus(EXTI_Line7) != RESET)
-    {//(SysTick_Clock() - lasttime) > 30&&
-        if ((0==D2))
-        {
-            //lasttime = SysTick_Clock();
-            --AbsoluteOpticalEncoder_VAL;
-            if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
-            {
-                AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
-            }
-            Data_Save(1);
-            //Sys_Printf(DEBUG_UARTNUM, "\r\n7VAL:%d", AbsoluteOpticalEncoder_VAL);
-        }
-        EXTI_ClearITPendingBit(EXTI_Line7);
-    }
-    else if (EXTI_GetITStatus(EXTI_Line8) != RESET)
-    {
-        EXTI_ClearITPendingBit(EXTI_Line8);
-    }
-    else if (EXTI_GetITStatus(EXTI_Line9) != RESET)
-    {
-        EXTI_ClearITPendingBit(EXTI_Line9);
-    }
+	if (EXTI_GetITStatus(EXTI_Line5) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line5);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line6) != RESET)
+	{
+		AbsoluteOpticalEncoderInOut1();
+		EXTI_ClearITPendingBit(EXTI_Line6);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line7) != RESET)
+	{
+		AbsoluteOpticalEncoderInOut2();
+		EXTI_ClearITPendingBit(EXTI_Line7);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line8) != RESET)
+	{
+		AbsoluteOpticalEncoderInOut3();
+		EXTI_ClearITPendingBit(EXTI_Line8);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line9) != RESET)
+	{
+		guandian();
+		EXTI_ClearITPendingBit(EXTI_Line9);
+	}
 }
 
 void USART1_IRQHandler(void)  //串口中断函数
 {
-    // ATK_Usart1_IQR();
-    //SYS_UART_IQR(USART1);
-    SysUartTxIqr(USART1);
-    SysUart1RxIqr();
+	// ATK_Usart1_IQR();
+	//SYS_UART_IQR(USART1);
+	SysUartTxIqr(USART1);
+	SysUart1RxIqr();
 }
 void USART2_IRQHandler(void)  //串口中断函数
 {
-    // ATK_Usart2_IQR();
-    //SYS_UART_IQR(USART2);
-    SysUartTxIqr(USART2);
-    SysUart3RxIqr();
+	// ATK_Usart2_IQR();
+	//SYS_UART_IQR(USART2);
+	SysUartTxIqr(USART2);
+	SysUart2RxIqr();
 }
 void USART3_IRQHandler(void)  //串口中断函数
 {
-    //ATK_Usart3_IQR()
-    //  SYS_UART_IQR(USART3);
-    SysUartTxIqr(USART3);
-    SysUart3RxIqr();
+	//ATK_Usart3_IQR()
+	//  SYS_UART_IQR(USART3);
+	SysUartTxIqr(USART3);
+	SysUart3RxIqr();
 }
 void DMA1_Channel1_IRQHandler(void)
 {
-    if (DMA_GetITStatus(DMA1_IT_TC1))
-    {
-        DMA_ClearITPendingBit(DMA1_IT_GL1);
-    }
+	if (DMA_GetITStatus(DMA1_IT_TC1))
+	{
+		DMA_ClearITPendingBit(DMA1_IT_GL1);
+	}
 }
 void TIM1_BRK_IRQHandler(void)
 {
-    //TIM1_BRK_IRQ();
+	//TIM1_BRK_IRQ();
 }
 
 void TIM1_TRG_COM_IRQHandler(void)
 {
-    //TIM1_TRG_COM_IRQ();
+	//TIM1_TRG_COM_IRQ();
 }
 
 void TIM1_UP_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM1_CH1)||(CAP_TIM1_CH2)||(CAP_TIM1_CH3)||(CAP_TIM1_CH4)
-    extern void TIM1_Cap_IRQ(void);
-    TIM1_Cap_IRQ();
+	extern void TIM1_Cap_IRQ(void);
+	TIM1_Cap_IRQ();
 #endif
 }
 void TIM1_CC_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM1_CH1)||(CAP_TIM1_CH2)||(CAP_TIM1_CH3)||(CAP_TIM1_CH4)
-    extern void TIM1_Cap_IRQ(void);
-    TIM1_Cap_IRQ();
+	extern void TIM1_Cap_IRQ(void);
+	TIM1_Cap_IRQ();
 #endif
 }
 void TIM8_UP_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM8_CH1)||(CAP_TIM8_CH2)||(CAP_TIM8_CH3)||(CAP_TIM8_CH4)
-    extern void TIM8_Cap_IRQ(void);
-    TIM8_Cap_IRQ();
+	extern void TIM8_Cap_IRQ(void);
+	TIM8_Cap_IRQ();
 #endif
 }
 void TIM8_CC_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM8_CH1)||(CAP_TIM8_CH2)||(CAP_TIM8_CH3)||(CAP_TIM8_CH4)
-    extern void TIM8_Cap_IRQ(void);
-    TIM8_Cap_IRQ();
+	extern void TIM8_Cap_IRQ(void);
+	TIM8_Cap_IRQ();
 #endif
 }
 void TIM2_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM2_CH1)||(CAP_TIM2_CH2)||(CAP_TIM2_CH3)||(CAP_TIM2_CH4)
-    extern void TIM2_Cap_IRQ(void);
-    TIM2_Cap_IRQ();
+	extern void TIM2_Cap_IRQ(void);
+	TIM2_Cap_IRQ();
 #endif
 }
 void TIM3_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM3_CH1)||(CAP_TIM3_CH2)||(CAP_TIM3_CH3)||(CAP_TIM3_CH4)
-    extern void TIM3_Cap_IRQ(void);
-    TIM3_Cap_IRQ();
+	extern void TIM3_Cap_IRQ(void);
+	TIM3_Cap_IRQ();
 #endif
 }
 void TIM4_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM4_CH1)||(CAP_TIM4_CH2)||(CAP_TIM4_CH3)||(CAP_TIM4_CH4)
-    extern void TIM4_Cap_IRQ(void);
-    TIM4_Cap_IRQ();
+	extern void TIM4_Cap_IRQ(void);
+	TIM4_Cap_IRQ();
 #endif
 }
 void TIM5_IRQHandler(void)
 {
 #include "G32_Timer_Cap_Config.h"
 #if (CAP_TIM5_CH1)||(CAP_TIM5_CH2)||(CAP_TIM5_CH3)||(CAP_TIM5_CH4)
-    extern void TIM5_Cap_IRQ(void);
-    TIM5_Cap_IRQ();
+	extern void TIM5_Cap_IRQ(void);
+	TIM5_Cap_IRQ();
 #endif
 }
 void TIM6_IRQHandler(void)
 {
-    if (TIM6->SR & TIM_IT_Update)
-    {
-        //TIM6_IRQ();
-        TIM6->SR = ~TIM_FLAG_Update;
-    }
+	if (TIM6->SR & TIM_IT_Update)
+	{
+		//TIM6_IRQ();
+		TIM6->SR = ~TIM_FLAG_Update;
+	}
 }
 void TIM7_IRQHandler(void)
 {
-    if (TIM7->SR & TIM_IT_Update)
-    {
-        //TIM7_IRQ();
-        TIM7->SR = ~TIM_FLAG_Update;
-    }
+	if (TIM7->SR & TIM_IT_Update)
+	{
+		//TIM7_IRQ();
+		TIM7->SR = ~TIM_FLAG_Update;
+	}
 }
 /*******************************************************************************
 * Function Name  : USB_HP_CAN_TX_IRQHandler
@@ -240,7 +259,7 @@ void USB_HP_CAN1_TX_IRQHandler(void)
 *******************************************************************************/
 void USB_LP_CAN1_RX0_IRQHandler(void)
 {
-    //ATK_USB_LP_CAN1_RX0_IQR();
+	//ATK_USB_LP_CAN1_RX0_IQR();
 
 }
 void USBWakeUp_IRQHandler(void)
@@ -255,17 +274,17 @@ void USBWakeUp_IRQHandler(void)
 u32 SysTick_Time = 0;
 void SysTick_Handler(void)
 {
-    SysTick_Time++; if (SysTick_Time >= (OS_TICKS_PER_SEC * 60 * 60))SysTick_Time = 0;
-    // static int i = 0;
-    // if (i++ >= 1000)
-    // {
-    //     i = 0;
-    //     //time
-    //     Sys_Printf(USART1, "\r\n%d", mytime);
-    //     mytime = 0;
-    // }
-    UpdateTimers();
-    //RunTask(task5, 5); //任务0具有精确按时获得执行的权限，要求：task0每次执行消耗时间<0.5个 ticket
+	SysTick_Time++; if (SysTick_Time >= (OS_TICKS_PER_SEC * 60 * 60))SysTick_Time = 0;
+	// static int i = 0;
+	// if (i++ >= 1000)
+	// {
+	//     i = 0;
+	//     //time
+	//     Sys_Printf(USART1, "\r\n%d", mytime);
+	//     mytime = 0;
+	// }
+	UpdateTimers();
+	//RunTask(task5, 5); //任务0具有精确按时获得执行的权限，要求：task0每次执行消耗时间<0.5个 ticket
 }
 #endif
 

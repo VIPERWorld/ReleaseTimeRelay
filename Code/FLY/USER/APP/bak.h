@@ -5,6 +5,7 @@
 #endif
 #include "sys.h"
 
+void DataSaveInit(void);
 void Data_Save(u8 select);
 u16 Data_Read(void);
 void StmFlash_Read(void);

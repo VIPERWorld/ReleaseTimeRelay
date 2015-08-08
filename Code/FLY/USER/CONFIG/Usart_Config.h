@@ -16,7 +16,7 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 *********************************************/
 
 #define UARTWIFIUARTNUM   USART3 //WIFI
-#define DEBUG_UARTNUM     USART2 //DEBUG
+#define DEBUG_UARTNUM     USART3//USART2 //DEBUG
 #define USARTSCREEN       USART1 //串口屏
 
 #define EN_USART_    (1)       //Enable(1)/Disable(0)

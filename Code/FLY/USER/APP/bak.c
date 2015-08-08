@@ -20,8 +20,8 @@ void DataSaveInit(void)
 {
     RCC->APB1ENR |= 1 << 28;//RCC_APB1PeriphClockCmd(RCC_APB1Periph_PWR, ENABLE);
     RCC->APB1ENR |= 1 << 27;//RCC_APB1PeriphClockCmd(RCC_APB1Periph_BKP, ENABLE);
-    PWR->CR |= 1 << 8;      //DISENABLE写保护	
-	return;
+    PWR->CR |= 1 << 8;      //DISENABLE写保护
+    return;
 }
 void Data_Save(u8 select)
 {
@@ -31,55 +31,56 @@ void Data_Save(u8 select)
     switch (select)
     {
     case 1:
-        BKP_WriteBackupRegister(BKP_DR1 , (u16)(AbsoluteOpticalEncoder_LastVAL    ));
-				break;
-		case 2:
-        BKP_WriteBackupRegister(BKP_DR2 , (u16)(AbsoluteOpticalEncoder_Apart[0][0]));
-        BKP_WriteBackupRegister(BKP_DR3 , (u16)(AbsoluteOpticalEncoder_Apart[1][0]));
-        BKP_WriteBackupRegister(BKP_DR4 , (u16)(AbsoluteOpticalEncoder_Apart[2][0]));
-        BKP_WriteBackupRegister(BKP_DR5 , (u16)(AbsoluteOpticalEncoder_Apart[3][0]));
-        BKP_WriteBackupRegister(BKP_DR6 , (u16)(AbsoluteOpticalEncoder_Apart[4][0]));
-        BKP_WriteBackupRegister(BKP_DR7 , (u16)(AbsoluteOpticalEncoder_Apart[5][0]));
-        BKP_WriteBackupRegister(BKP_DR8 , (u16)(AbsoluteOpticalEncoder_Apart[6][0]));
-        BKP_WriteBackupRegister(BKP_DR9 , (u16)(AbsoluteOpticalEncoder_Apart[7][0]));
-        BKP_WriteBackupRegister(BKP_DR10, (u16)(AbsoluteOpticalEncoder_Apart[0][1]));
-        BKP_WriteBackupRegister(BKP_DR11, (u16)(AbsoluteOpticalEncoder_Apart[1][1]));
-        BKP_WriteBackupRegister(BKP_DR12, (u16)(AbsoluteOpticalEncoder_Apart[2][1]));
-        BKP_WriteBackupRegister(BKP_DR13, (u16)(AbsoluteOpticalEncoder_Apart[3][1]));
-        BKP_WriteBackupRegister(BKP_DR14, (u16)(AbsoluteOpticalEncoder_Apart[4][1]));
-        BKP_WriteBackupRegister(BKP_DR15, (u16)(AbsoluteOpticalEncoder_Apart[5][1]));
-        BKP_WriteBackupRegister(BKP_DR16, (u16)(AbsoluteOpticalEncoder_Apart[6][1]));
-        BKP_WriteBackupRegister(BKP_DR17, (u16)(AbsoluteOpticalEncoder_Apart[7][1]));
+        Data_Send_VAL(0x0200, AbsoluteOpticalEncoder_VAL);
+        BKP_WriteBackupRegister(BKP_DR10 , (u16)(AbsoluteOpticalEncoder_VAL    ));
         break;
-		case 3:
-        BKP_WriteBackupRegister(BKP_DR18, (u16)(TimeUnlock.u16[0]));
-        BKP_WriteBackupRegister(BKP_DR19, (u16)(TimeUnlock.u16[1]));
+    case 2:
+        BKP_WriteBackupRegister(BKP_DR2 , (u16)(AbsoluteOpticalEncoder_Apart[0][0]));
+        BKP_WriteBackupRegister(BKP_DR3 , (u16)(AbsoluteOpticalEncoder_Apart[0][1]));
+        BKP_WriteBackupRegister(BKP_DR4 , (u16)(AbsoluteOpticalEncoder_Apart[1][0]));
+        BKP_WriteBackupRegister(BKP_DR5 , (u16)(AbsoluteOpticalEncoder_Apart[1][1]));
+        BKP_WriteBackupRegister(BKP_DR6 , (u16)(AbsoluteOpticalEncoder_Apart[2][0]));
+        BKP_WriteBackupRegister(BKP_DR7 , (u16)(AbsoluteOpticalEncoder_Apart[2][1]));
+        BKP_WriteBackupRegister(BKP_DR8 , (u16)(AbsoluteOpticalEncoder_Apart[3][0]));
+        BKP_WriteBackupRegister(BKP_DR9 , (u16)(AbsoluteOpticalEncoder_Apart[3][1]));
+        //BKP_WriteBackupRegister(BKP_DR10, (u16)(AbsoluteOpticalEncoder_Apart[4][0]));
+//        BKP_WriteBackupRegister(BKP_DR11, (u16)(AbsoluteOpticalEncoder_Apart[1][1]));
+//        BKP_WriteBackupRegister(BKP_DR12, (u16)(AbsoluteOpticalEncoder_Apart[2][1]));
+//        BKP_WriteBackupRegister(BKP_DR13, (u16)(AbsoluteOpticalEncoder_Apart[3][1]));
+//        BKP_WriteBackupRegister(BKP_DR14, (u16)(AbsoluteOpticalEncoder_Apart[4][1]));
+//        BKP_WriteBackupRegister(BKP_DR15, (u16)(AbsoluteOpticalEncoder_Apart[5][1]));
+//        BKP_WriteBackupRegister(BKP_DR16, (u16)(AbsoluteOpticalEncoder_Apart[6][1]));
+//        BKP_WriteBackupRegister(BKP_DR17, (u16)(AbsoluteOpticalEncoder_Apart[7][1]));
+        break;
+//    case 3:
+//        BKP_WriteBackupRegister(BKP_DR18, (u16)(TimeUnlock.u16[0]));
+//        BKP_WriteBackupRegister(BKP_DR19, (u16)(TimeUnlock.u16[1]));
     }
-    BKP_WriteBackupRegister(BKP_DR20, 1);
-		return;
+//    BKP_WriteBackupRegister(BKP_DR20, 1);
+    return;
 }
 u16 Data_Read(void)
 {
-    AbsoluteOpticalEncoder_LastVAL     =  ((s16)(BKP_ReadBackupRegister(BKP_DR1 )));
+    AbsoluteOpticalEncoder_VAL         =  ((s16)(BKP_ReadBackupRegister(BKP_DR10 )));
     AbsoluteOpticalEncoder_Apart[0][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR2 )));
-    AbsoluteOpticalEncoder_Apart[1][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR3 )));
-    AbsoluteOpticalEncoder_Apart[2][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR4 )));
-    AbsoluteOpticalEncoder_Apart[3][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR5 )));
-    AbsoluteOpticalEncoder_Apart[4][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR6 )));
-    AbsoluteOpticalEncoder_Apart[5][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR7 )));
-    AbsoluteOpticalEncoder_Apart[6][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR8 )));
-    AbsoluteOpticalEncoder_Apart[7][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR9 )));
-    AbsoluteOpticalEncoder_Apart[0][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR10)));
-    AbsoluteOpticalEncoder_Apart[1][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR11)));
-    AbsoluteOpticalEncoder_Apart[2][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR12)));
-    AbsoluteOpticalEncoder_Apart[3][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR13)));
-    AbsoluteOpticalEncoder_Apart[4][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR14)));
-    AbsoluteOpticalEncoder_Apart[5][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR15)));
-    AbsoluteOpticalEncoder_Apart[6][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR16)));
-    AbsoluteOpticalEncoder_Apart[7][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR17)));
-	  TimeUnlock.u16[0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR18)));
-    TimeUnlock.u16[1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR19)));
-    return BKP_ReadBackupRegister(BKP_DR20);
+    AbsoluteOpticalEncoder_Apart[0][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR3 )));
+    AbsoluteOpticalEncoder_Apart[1][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR4 )));
+    AbsoluteOpticalEncoder_Apart[1][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR5 )));
+    AbsoluteOpticalEncoder_Apart[2][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR6 )));
+    AbsoluteOpticalEncoder_Apart[2][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR7 )));
+    AbsoluteOpticalEncoder_Apart[3][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR8 )));
+    AbsoluteOpticalEncoder_Apart[3][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR9 )));
+//    AbsoluteOpticalEncoder_Apart[4][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR10)));
+//    AbsoluteOpticalEncoder_Apart[1][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR11)));
+//    AbsoluteOpticalEncoder_Apart[2][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR12)));
+//    AbsoluteOpticalEncoder_Apart[3][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR13)));
+//    AbsoluteOpticalEncoder_Apart[4][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR14)));
+//    AbsoluteOpticalEncoder_Apart[5][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR15)));
+//    AbsoluteOpticalEncoder_Apart[6][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR16)));
+//    AbsoluteOpticalEncoder_Apart[7][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR17)));
+//    TimeUnlock.u16[0]                  =  ((u16)(BKP_ReadBackupRegister(BKP_DR18)));
+//    TimeUnlock.u16[1]                  =  ((u16)(BKP_ReadBackupRegister(BKP_DR19)));
+    return 0;//BKP_ReadBackupRegister(BKP_DR20);
 };
 
 #define SIZE 21
