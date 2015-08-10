@@ -27,9 +27,9 @@ void guandian()//B9
 		RELAY10_ON;
 	}
 }
-void AbsoluteOpticalEncoderInOut1(void)//B6
+void AbsoluteOpticalEncoderInOut1(void)//B6//编码器加
 {
-	if ((0 == B7))
+	if ((0 == B7))//在编码器减为零时
 	{
 		++AbsoluteOpticalEncoder_VAL;
 		if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
@@ -39,9 +39,9 @@ void AbsoluteOpticalEncoderInOut1(void)//B6
 		Data_Save(1);
 	}
 }
-void AbsoluteOpticalEncoderInOut2(void)//B7
+void AbsoluteOpticalEncoderInOut2(void)//B7//编码器减
 {
-	if ((0 == B6))
+	if ((0 == B6))//在编码器减为零时
 	{
 		--AbsoluteOpticalEncoder_VAL;
 		if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
@@ -51,12 +51,12 @@ void AbsoluteOpticalEncoderInOut2(void)//B7
 		Data_Save(1);
 	}
 }
-void AbsoluteOpticalEncoderInOut3(void)//B8
+void AbsoluteOpticalEncoderInOut3(void)//B8//编码器清零
 {
-	if(1==B7)
+	if (1 == B7) //在编码器减为一时
 	{
-	AbsoluteOpticalEncoder_VAL = 1;
-	Data_Save(1);	
+		AbsoluteOpticalEncoder_VAL = 1;
+		Data_Save(1);
 	}
 }
 
