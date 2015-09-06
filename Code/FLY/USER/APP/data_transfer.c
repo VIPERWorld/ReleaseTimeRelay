@@ -69,10 +69,10 @@ void Ex_Anl(u8 *data_buf)
 #endif
         {
             KeyUnlockFlag = 0;
-            TimeUnlock.u8[0] = *(data_buf + 4);
-            TimeUnlock.u8[1] = *(data_buf + 5);
-            TimeUnlock.u8[2] = *(data_buf + 6);
-            TimeUnlock.u8[3] = *(data_buf + 7);
+            TimeUnlock.u8[3] = *(data_buf + 4);
+            TimeUnlock.u8[2] = *(data_buf + 5);
+            TimeUnlock.u8[1] = *(data_buf + 6);
+            TimeUnlock.u8[0] = *(data_buf + 7);
         }
         Sys_Printf(DEBUG_UARTNUM, "\r\nTimeUnlock:%d", TimeUnlock.u32);
         break;
