@@ -32,6 +32,9 @@ void SYS_INIT(void)
 	Sys_Printf(USART2, (char *)"USART2 DEBUG_UARTNUM\r\n");
 	Sys_Printf(USART3, (char *)"USART1 UARTWIFIUARTNUM\r\n");
 	delay_ms(100);
+	StmFlash_Read();
+	DataSaveInit();
+	Data_Read();
 }
 
 #include "rtc.h"
@@ -40,9 +43,7 @@ void SYS_INIT(void)
 u16 task_rtc(void)
 {
 	_SS
-	DataSaveInit();
-	Data_Read();
-	TimeUnlock.u32 = 0x7fffffff;
+//	TimeUnlock.u32 = 0x7fffffff;
 	if (RTC_Init() == 0)
 	{
 		Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC ok");
