@@ -79,7 +79,7 @@ void Ex_Anl(u8 *data_buf)
             TimeUnlock.u8[0] = *(data_buf + 7);
         }
         Data_Save(3);
-        Sys_Printf(DEBUG_UARTNUM, "\r\nTimeUnlock:%d", TimeUnlock.u32);
+        Sys_Printf(USART3, (char *)"OK\r\n");
         break;
     }
     case 0X13://得到解锁初始密钥
@@ -161,6 +161,7 @@ void Ex_Anl(u8 *data_buf)
 			*(data_buf + 7),
 			*(data_buf + 8),
 			00);
+			Sys_Printf(USART3, (char *)"OK\r\n");
 		}
     }
 }
@@ -251,7 +252,8 @@ int turn(int in, int around)
 }
 void UsrtScreenAnl(u8 *data_buf)
 {
-    switch ((((vs16)(*(data_buf + 4)) << 8) & 0x0f) | *(data_buf + 5))
+	u16 tmp=((((vs16)(*(data_buf + 4)) << 8) & 0xff00) | *(data_buf + 5));
+    switch ((((vs16)(*(data_buf + 4)) << 8) & 0xff00) | *(data_buf + 5))
     {
     case 0x0010: {AbsoluteOpticalEncoder_Apart[0][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(0, 1); break;}
     case 0x0011: {AbsoluteOpticalEncoder_Apart[0][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(0, 1); break;}
@@ -277,7 +279,7 @@ void UsrtScreenAnl(u8 *data_buf)
     }
     Data_Save(2);
 
-    Sys_Printf(USART2, "\r\n %d", ((((vs16)(*(data_buf + 4)) << 8)&0xff)  | *(data_buf + 5)));
+    // Sys_Printf(USART2, "\r\n %d", ((((vs16)(*(data_buf + 4)) << 8)&0xff)  | *(data_buf + 5)));
     //Sys_Printf(USART2, "\r\n %d", *(data_buf + 5));
 
     return;

@@ -30,11 +30,8 @@ void SYS_INIT(void)
 	uart3_init(115200);
 	Sys_Printf(USART1, (char *)"USART USARTSCREEN\r\n");
 	Sys_Printf(USART2, (char *)"USART2 DEBUG_UARTNUM\r\n");
-	Sys_Printf(USART3, (char *)"USART1 UARTWIFIUARTNUM\r\n");
+	Sys_Printf(USART3, (char *)"USART3 UARTWIFIUARTNUM\r\n");
 	delay_ms(100);
-	StmFlash_Read();
-	DataSaveInit();
-	Data_Read();
 }
 
 #include "rtc.h"
@@ -43,6 +40,9 @@ void SYS_INIT(void)
 u16 task_rtc(void)
 {
 	_SS
+	DataSaveInit();
+	Data_Read();
+	TimeUnlock.u32 = 0x7fffffff;
 	if (RTC_Init() == 0)
 	{
 		Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC ok");
@@ -81,7 +81,7 @@ u16 task_rtc(void)
 		            + calendar.hour) * 100
 		           + calendar.min);
 		Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC: %d %s", tmp, time);
-		Data_Send_VAL64(0x0308, tmp); //((((calendar.w_year * 100
+		Data_Send_VAL64(0x0308,tmp);//((((calendar.w_year * 100
 //		              + calendar.w_month) * 100
 //		             + calendar.w_date) * 100
 //		            + calendar.hour) * 100
@@ -98,26 +98,7 @@ u16 task_rtc(void)
 	}
 	_EE
 }
-//AbsoluteOpticalEncoder_Apart
-/**
- * [RelaySame description]
- * @param  DataCur 当前数据
- * @return         
- * 0:相同
- * 1:不同
- */
-//int RelaySame(u16 DataCur)
-//{
-//	static DataLast[AbsoluteOpticalEncoderNUM]={0}
-//	for (int i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
-//	{
-//		if (DataLast[i]!=DataCur[i])
-//		{
-//			return 1;//不同
-//		}
-//	}
-//	return 0;//same
-//}
+
 void RelayControl(void)
 {
 	if (RelayStata[0]) {RELAY0_ON;} else {RELAY0_OFF;}
@@ -148,56 +129,33 @@ void RelayControlOff(void)
 int TaskRelay(void)
 {
 	_SS
-	RELAY0_INIT; RELAY0_ON;
-	RELAY1_INIT; RELAY1_ON;
-	RELAY2_INIT; RELAY2_ON;
-	RELAY3_INIT; RELAY3_ON;
-	RELAY4_INIT; RELAY4_ON;
-	RELAY5_INIT; RELAY5_ON;
-	RELAY6_INIT; RELAY6_ON;
-	RELAY7_INIT; RELAY7_ON;
-	RELAY8_INIT; RELAY8_ON;
-	RELAY9_INIT; RELAY9_ON;
-	RELAY10_INIT; RELAY10_ON;
+	RELAY0_INIT; RELAY0_OFF;
+	RELAY1_INIT; RELAY1_OFF;
+	RELAY2_INIT; RELAY2_OFF;
+	RELAY3_INIT; RELAY3_OFF;
+	RELAY4_INIT; RELAY4_OFF;
+	//RELAY5_INIT; RELAY5_OFF;
+//	RELAY6_INIT; RELAY6_OFF;
+	//RELAY7_INIT; RELAY7_OFF;
+//	RELAY8_INIT; RELAY8_OFF;
+//	RELAY9_INIT; RELAY9_OFF;
+	RELAY10_INIT;RELAY10_OFF;
+	
 
-	WaitX(500);
-	RELAY0_OFF;
-	RELAY1_OFF;
-	RELAY2_OFF;
-	RELAY3_OFF;
-	RELAY4_OFF;
-	RELAY5_OFF;
-	RELAY6_OFF;
-	RELAY7_OFF;
-	RELAY8_OFF;
-	RELAY9_OFF;
-	RELAY10_OFF;
 
-	WaitX(500);
-	RELAY0_ON;
-	RELAY1_ON;
-	RELAY2_ON;
-	RELAY3_ON;
-	RELAY4_ON;
-	RELAY5_ON;
-	RELAY6_ON;
-	RELAY7_ON;
-	RELAY8_ON;
-	RELAY9_ON;
-	RELAY10_ON;
+	
 
-	WaitX(1000);
-	WaitX(1000);
+WaitX(1000);
 
 	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_AFIO, ENABLE ); GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 	EXTI_Configuration(GPIOB, GPIO_Pin_6, 0);// 表示作为外部中断 0下降沿触发
 	EXTI_Configuration(GPIOB, GPIO_Pin_7, 0);// 表示作为外部中断 0下降沿触发
-	EXTI_Configuration(GPIOB, GPIO_Pin_8, 1);// 表示作为外部中断 0下降沿触发 1上升沿
+	EXTI_Configuration(GPIOB, GPIO_Pin_8, 0);// 表示作为外部中断 0下降沿触发 1上升沿
 	EXTI_Configuration(GPIOB, GPIO_Pin_9, 2);// 表示作为外部中断 2上升和下降沿触发
 	EXTI_NVIC_Configuration(6, 2, 0, 0);//-
 	EXTI_NVIC_Configuration(7, 2, 1, 1);//+
 	EXTI_NVIC_Configuration(8, 2, 0, 0);//0
-	EXTI_NVIC_Configuration(9, 2, 0, 0);//广电开关
+	EXTI_NVIC_Configuration(9, 2, 0, 0);//光电开关
 
 	while (1)
 	{
@@ -206,33 +164,33 @@ int TaskRelay(void)
 		{
 			for (int i = 0; i < AbsoluteOpticalEncoderNUM ; ++i)
 			{
-				if (AbsoluteOpticalEncoder_Apart[i][0] < AbsoluteOpticalEncoder_Apart[i][1])
+				if(AbsoluteOpticalEncoder_Apart[i][0]<AbsoluteOpticalEncoder_Apart[i][1])
 				{
-					if (
-					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
-					    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][1])
-					)
-					{
-						RelayStata[i] = 1;
-					}
-					else
-					{
-						RelayStata[i] = 0;
-					}
+				if (
+				    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
+				    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][1])
+				)
+				{
+					RelayStata[i] = 1;
 				}
 				else
 				{
-					if (
-					    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][0]) &&
-					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][1])
-					)
-					{
-						RelayStata[i] = 1;
-					}
-					else
-					{
-						RelayStata[i] = 0;
-					}
+					RelayStata[i] = 0;
+				}
+			}
+				else
+				{
+									if (
+				    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][0]) &&
+				    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][1])
+				)
+				{
+					RelayStata[i] = 1;
+				}
+				else
+				{
+					RelayStata[i] = 0;
+				}
 				}
 			}
 			RelayControl();
@@ -389,6 +347,7 @@ int TaskUsrtWifi(void)
 						}
 					}
 				}
+				
 			}
 			WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+PMTF\r"); //存到FLASH
 			WaitX(1000); Sys_Printf(UARTWIFIUARTNUM, (char *)"AT+Z\r"); //复位
