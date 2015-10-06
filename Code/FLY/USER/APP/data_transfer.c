@@ -277,7 +277,7 @@ void UsrtScreenAnl(u8 *data_buf)
     }
     Data_Save(2);
 
-    // Sys_Printf(USART2, "\r\n %d", ((((vs16)(*(data_buf + 4)) << 8)&0xff)  | *(data_buf + 5)));
+    Sys_Printf(USART2, "\r\n %d", ((((vs16)(*(data_buf + 4)) << 8)&0xff)  | *(data_buf + 5)));
     //Sys_Printf(USART2, "\r\n %d", *(data_buf + 5));
 
     return;

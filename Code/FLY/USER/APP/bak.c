@@ -36,32 +36,25 @@ void Data_Save(u8 select)
         BKP_WriteBackupRegister(BKP_DR10 , (u16)(AbsoluteOpticalEncoder_VAL    ));
         break;
     case 2:
-//        BKP_WriteBackupRegister(BKP_DR2 , (u16)(AbsoluteOpticalEncoder_Apart[0][0]));
-//        BKP_WriteBackupRegister(BKP_DR3 , (u16)(AbsoluteOpticalEncoder_Apart[0][1]));
-//        BKP_WriteBackupRegister(BKP_DR4 , (u16)(AbsoluteOpticalEncoder_Apart[1][0]));
-//        BKP_WriteBackupRegister(BKP_DR5 , (u16)(AbsoluteOpticalEncoder_Apart[1][1]));
-//        BKP_WriteBackupRegister(BKP_DR6 , (u16)(AbsoluteOpticalEncoder_Apart[2][0]));
-//        BKP_WriteBackupRegister(BKP_DR7 , (u16)(AbsoluteOpticalEncoder_Apart[2][1]));
         break;
     case 3:
         BKP_WriteBackupRegister(BKP_DR8, (u16)(TimeUnlock.u16[0]));
         BKP_WriteBackupRegister(BKP_DR9, (u16)(TimeUnlock.u16[1]));
     }
-//    BKP_WriteBackupRegister(BKP_DR20, 1);
+    //BKP_WriteBackupRegister(BKP_DR1, 0x5050);
     return;
 }
-u16 Data_Read(void)
+int Data_Read(void)
 {
-    AbsoluteOpticalEncoder_VAL         =  ((s16)(BKP_ReadBackupRegister(BKP_DR10 )));
-//    AbsoluteOpticalEncoder_Apart[0][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR2 )));
-//    AbsoluteOpticalEncoder_Apart[0][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR3 )));
-//    AbsoluteOpticalEncoder_Apart[1][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR4 )));
-//    AbsoluteOpticalEncoder_Apart[1][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR5 )));
-//    AbsoluteOpticalEncoder_Apart[2][0] =  ((u16)(BKP_ReadBackupRegister(BKP_DR6 )));
-//    AbsoluteOpticalEncoder_Apart[2][1] =  ((u16)(BKP_ReadBackupRegister(BKP_DR7 )));
+		if(0x5050==((u16)(BKP_ReadBackupRegister(BKP_DR1))))
+		{
+    AbsoluteOpticalEncoder_VAL         =  ((s16)(BKP_ReadBackupRegister(BKP_DR10)));
     TimeUnlock.u16[0]                  =  ((u16)(BKP_ReadBackupRegister(BKP_DR8)));
     TimeUnlock.u16[1]                  =  ((u16)(BKP_ReadBackupRegister(BKP_DR9)));
-    return 0;//BKP_ReadBackupRegister(BKP_DR20);
+		}
+		else
+			return 1;			
+    return 0;
 };
 
 // #define SIZE 18

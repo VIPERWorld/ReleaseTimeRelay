@@ -43,7 +43,6 @@ void SYS_INIT(void)
 u16 task_rtc(void)
 {
 	_SS
-//	TimeUnlock.u32 = 0x7fffffff;
 	if (RTC_Init() == 0)
 	{
 		Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC ok");
@@ -82,7 +81,7 @@ u16 task_rtc(void)
 		            + calendar.hour) * 100
 		           + calendar.min);
 		Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC: %d %s", tmp, time);
-		Data_Send_VAL64(0x0308,tmp);//((((calendar.w_year * 100
+		Data_Send_VAL64(0x0308, tmp); //((((calendar.w_year * 100
 //		              + calendar.w_month) * 100
 //		             + calendar.w_date) * 100
 //		            + calendar.hour) * 100
@@ -99,7 +98,26 @@ u16 task_rtc(void)
 	}
 	_EE
 }
-
+//AbsoluteOpticalEncoder_Apart
+/**
+ * [RelaySame description]
+ * @param  DataCur 当前数据
+ * @return         
+ * 0:相同
+ * 1:不同
+ */
+//int RelaySame(u16 DataCur)
+//{
+//	static DataLast[AbsoluteOpticalEncoderNUM]={0}
+//	for (int i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
+//	{
+//		if (DataLast[i]!=DataCur[i])
+//		{
+//			return 1;//不同
+//		}
+//	}
+//	return 0;//same
+//}
 void RelayControl(void)
 {
 	if (RelayStata[0]) {RELAY0_ON;} else {RELAY0_OFF;}
@@ -141,7 +159,7 @@ int TaskRelay(void)
 	RELAY8_INIT; RELAY8_ON;
 	RELAY9_INIT; RELAY9_ON;
 	RELAY10_INIT; RELAY10_ON;
-	
+
 	WaitX(500);
 	RELAY0_OFF;
 	RELAY1_OFF;
@@ -154,7 +172,7 @@ int TaskRelay(void)
 	RELAY8_OFF;
 	RELAY9_OFF;
 	RELAY10_OFF;
-	
+
 	WaitX(500);
 	RELAY0_ON;
 	RELAY1_ON;
@@ -168,8 +186,8 @@ int TaskRelay(void)
 	RELAY9_ON;
 	RELAY10_ON;
 
-WaitX(1000);
-WaitX(1000);
+	WaitX(1000);
+	WaitX(1000);
 
 	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_AFIO, ENABLE ); GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 	EXTI_Configuration(GPIOB, GPIO_Pin_6, 0);// 表示作为外部中断 0下降沿触发
@@ -188,33 +206,33 @@ WaitX(1000);
 		{
 			for (int i = 0; i < AbsoluteOpticalEncoderNUM ; ++i)
 			{
-				if(AbsoluteOpticalEncoder_Apart[i][0]<AbsoluteOpticalEncoder_Apart[i][1])
+				if (AbsoluteOpticalEncoder_Apart[i][0] < AbsoluteOpticalEncoder_Apart[i][1])
 				{
-				if (
-				    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
-				    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][1])
-				)
-				{
-					RelayStata[i] = 1;
+					if (
+					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
+					    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][1])
+					)
+					{
+						RelayStata[i] = 1;
+					}
+					else
+					{
+						RelayStata[i] = 0;
+					}
 				}
 				else
 				{
-					RelayStata[i] = 0;
-				}
-			}
-				else
-				{
-									if (
-				    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][0]) &&
-				    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][1])
-				)
-				{
-					RelayStata[i] = 1;
-				}
-				else
-				{
-					RelayStata[i] = 0;
-				}
+					if (
+					    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][0]) &&
+					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][1])
+					)
+					{
+						RelayStata[i] = 1;
+					}
+					else
+					{
+						RelayStata[i] = 0;
+					}
 				}
 			}
 			RelayControl();
@@ -243,8 +261,8 @@ const char *ATCommandList[CONFIGSUMNUM][3] = {
 	},
 	{
 		"AT+ATRM=?",
-		"OK=0,0,\"192.168.1.116\",4001",
-		"AT+ATRM=0,0,\"192.168.1.116\",4001"
+		"OK=0,0,\"192.168.5.108\",4001",
+		"AT+ATRM=0,0,\"192.168.5.108\",4001"
 	}
 };
 
@@ -379,6 +397,17 @@ int TaskUsrtWifi(void)
 	}
 	_EE
 }
+
+int TaskControl(void)
+{
+	_SS
+	for(;;)
+		{
+			WaitX(1000);
+			//if
+		}
+ _EE
+}
 int main(void)
 {
 	SYS_INIT();
@@ -388,5 +417,6 @@ int main(void)
 		RunTaskA(task_rtc, 1);
 		RunTaskA(TaskRelay, 2);
 		RunTaskA(TaskUsrtWifi, 3);
+		RunTaskA(TaskControl, 4);
 	}
 }

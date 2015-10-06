@@ -1,0 +1,4 @@
+import re,urllib2
+from subprocess import Popen, PIPE
+
+LocalIP=re.search('192.168.\d+\.\d+',Popen('ipconfig', stdout=PIPE).stdout.read()).group(0)
