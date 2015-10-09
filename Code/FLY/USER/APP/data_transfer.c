@@ -8,8 +8,10 @@
 /*USAR*/
 #include "minos_delay.h"
 #include "aes.h"
+#include "rtc.h"
 
 /*Define*/
+
 #define DATA_TRANSFER_USE_USART
 #define SUM_CHECK_HOLD 0//1 OPEN 0 CLOSE
 #define SIMPLEUNLOCK 0
@@ -19,13 +21,17 @@
 //struct DATA_TRANSFER_SWITCH Ex_ON_OFF, Send;
 
 int AbsoluteOpticalEncoder_VAL     = 0;//绝对式光电编码器
-u16 AbsoluteOpticalEncoder_LastVAL = 0;//绝对式光电编码器
+//s16 AbsoluteOpticalEncoder_LastVAL = 0;//绝对式光电编码器
 u8 RelayStata[AbsoluteOpticalEncoderNUM] = {0}; //继电器状态
 _Uu32u8 TimeUnlock;//锁定时间
+_calendar_obj TimeUnlockEx;
+TIME_S DeathTime;
 int TimeUnlockFlag = 0;// 时间解锁标志
 int WifiConfigFlag = 0;//wifi配置命令标志
 int WifiRESTFlag   = 0;//wifi重置命令标志
 int breakENTMFlag  = 0;//跳出透明传输标志
+
+u16 u16FreeTime=0;//屏幕空闲时间计数
 
 u16 AbsoluteOpticalEncoder_Apart[AbsoluteOpticalEncoderNUM][2] =//继电器阈值
 {
@@ -36,6 +42,7 @@ u16 AbsoluteOpticalEncoder_Apart[AbsoluteOpticalEncoderNUM][2] =//继电器阈�
     {120, 150},
     {150, 180},
     {180, 210},
+    {210, 360},
     {210, 360}
 };
 union
@@ -43,6 +50,7 @@ union
     u8 u8[12];
     u32 u32[3];
 } ChipUniqueID;
+#include "rtc.h"
 void Ex_Anl(u8 *data_buf)
 {
     u8 LastUnlockKey[16];
@@ -74,7 +82,8 @@ void Ex_Anl(u8 *data_buf)
             TimeUnlock.u8[1] = *(data_buf + 6);
             TimeUnlock.u8[0] = *(data_buf + 7);
         }
-        Sys_Printf(DEBUG_UARTNUM, "\r\nTimeUnlock:%d", TimeUnlock.u32);
+        Data_Save(3);
+        Sys_Printf(USART3, (char *)"OK\r\n");
         break;
     }
     case 0X13://得到解锁初始密钥
@@ -147,6 +156,17 @@ void Ex_Anl(u8 *data_buf)
         }
         break;
     }
+    case 0x16:
+    {
+        RTC_Set(
+            2000 + * (data_buf + 4),
+            *(data_buf + 5),
+            *(data_buf + 6),
+            *(data_buf + 7),
+            *(data_buf + 8),
+            00);
+        Sys_Printf(USART3, (char *)"OK\r\n");
+    }
     }
 }
 
@@ -165,27 +185,94 @@ void Data_Receive_Anl(u8 *data_buf, u8 num)
 }
 #define FRAMEHEADER1 0x5A//双帧头
 #define FRAMEHEADER2 0xA5//次帧头
-void Data_Send_EncoderApartStatus(void)
+void Data_Send_EncoderApartStatus(int i, int j)
+{
+    u8 _cnt = 0;
+    u8 data_to_send[16];
+    data_to_send[_cnt++] = FRAMEHEADER1;//0
+    data_to_send[_cnt++] = FRAMEHEADER2;//1
+    data_to_send[_cnt++] = 5;//长度//2
+    data_to_send[_cnt++] = 0x82;//数据下发//3
+    vs16 _temp;
+    for (int k = 0; k < 2; k++)
+    {
+        _cnt = 5;
+        data_to_send[4] = j;//4
+        data_to_send[_cnt++] = ((i + 1) << 4) + k; //5
+        _temp = AbsoluteOpticalEncoder_Apart[i][k];
+        data_to_send[_cnt++] = BYTE1(_temp);
+        data_to_send[_cnt++] = BYTE0(_temp);
+        Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
+    }
+}
+void Data_Send_Reg2(u8 addr, u16 val)
 {
     u8 _cnt = 0;
     u8 data_to_send[16];
     data_to_send[_cnt++] = FRAMEHEADER1;
     data_to_send[_cnt++] = FRAMEHEADER2;
-    data_to_send[_cnt++] = 5;//长度
-    data_to_send[_cnt++] = 0x82;//数据下发
+    data_to_send[_cnt++] = 4;//长度
+    data_to_send[_cnt++] = 0x80;//写寄存器
     vs16 _temp;
-    for (int i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
-    {
-        _cnt = 4;
-        data_to_send[_cnt++] = 1;
-        data_to_send[_cnt++] = i + 1;
-        _temp = AbsoluteOpticalEncoder_Apart[i][1]; data_to_send[_cnt++] = BYTE1(_temp); data_to_send[_cnt++] = BYTE0(_temp);
-        Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
-        data_to_send[4] = 0; //滑块
-        Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
+    data_to_send[_cnt++] = addr;
+    _temp = val;
+    data_to_send[_cnt++] = BYTE1(_temp);
+    data_to_send[_cnt++] = BYTE0(_temp);
+    Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
+}
+void Data_Send_Reg1(u8 addr, u8 val)
+{
+    u8 _cnt = 0;
+    u8 data_to_send[16];
+    data_to_send[_cnt++] = FRAMEHEADER1;
+    data_to_send[_cnt++] = FRAMEHEADER2;
+    data_to_send[_cnt++] = 3;//长度
+    data_to_send[_cnt++] = 0x80;//写寄存器
+    data_to_send[_cnt++] = addr;
+    data_to_send[_cnt++] = val;
+    Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
+}
+void Data_Send_VAL(u16 addr, u16 val)
+{
+    u8 _cnt = 0;
+    u8 data_to_send[16];
+    data_to_send[_cnt++] = FRAMEHEADER1;//0
+    data_to_send[_cnt++] = FRAMEHEADER2;//1
+    data_to_send[_cnt++] = 5;//长度//2
+    data_to_send[_cnt++] = 0x82;//数据下发//3
+    vs16 _temp;
+    _temp = addr;
+    data_to_send[_cnt++] = BYTE1(_temp);;
+    data_to_send[_cnt++] = BYTE0(_temp);; //5
+    _temp = val;
+    data_to_send[_cnt++] = BYTE1(_temp);
+    data_to_send[_cnt++] = BYTE0(_temp);
+    Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
+}
+void Data_Send_VAL64(u16 addr, u32 val)
+{
+    u8 _cnt = 0;
+    u8 data_to_send[16];
+    data_to_send[_cnt++] = FRAMEHEADER1;//0
+    data_to_send[_cnt++] = FRAMEHEADER2;//1
+    data_to_send[_cnt++] = 7;//长度//2
+    data_to_send[_cnt++] = 0x82;//数据下发//3
+    vs16 _temp;
+    _temp = addr;
+    data_to_send[_cnt++] = BYTE1(_temp);
+    data_to_send[_cnt++] = BYTE0(_temp); //5
+    vs32 _temp64;
+    _temp64 = val;
+//    data_to_send[_cnt++] = BYTE7(_temp64);
+//    data_to_send[_cnt++] = BYTE6(_temp64);
+//    data_to_send[_cnt++] = BYTE5(_temp64);
+//    data_to_send[_cnt++] = BYTE4(_temp64);
+    data_to_send[_cnt++] = BYTE3(_temp64);
+    data_to_send[_cnt++] = BYTE2(_temp64);
+    data_to_send[_cnt++] = BYTE1(_temp64);
+    data_to_send[_cnt++] = BYTE0(_temp64);
 
-        //Sys_sPrintf(USART2, data_to_send, _cnt);
-    }
+    Sys_sPrintf(USARTSCREEN, data_to_send, _cnt);
 }
 int turn(int in, int around)
 {
@@ -196,56 +283,86 @@ int turn(int in, int around)
 }
 void UsrtScreenAnl(u8 *data_buf)
 {
-    switch ((u16)((vs16)(*(data_buf + 4)) << 8) | *(data_buf + 5))
+//    u16 tmp = ((((vs16)(*(data_buf + 4)) << 8) & 0xff00) | *(data_buf + 5));
+    switch ((((vs16)(*(data_buf + 4)) << 8) & 0xff00) | *(data_buf + 5))
     {
-    case 0x0001:
-        AbsoluteOpticalEncoder_Apart[0][1] = AbsoluteOpticalEncoder_Apart[1][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[1][0] > AbsoluteOpticalEncoder_Apart[1][1]) AbsoluteOpticalEncoder_Apart[0][1] = AbsoluteOpticalEncoder_Apart[1][0] = AbsoluteOpticalEncoder_Apart[1][1];
-        break;
-    case 0x0002: AbsoluteOpticalEncoder_Apart[1][1] = AbsoluteOpticalEncoder_Apart[2][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[2][0] > AbsoluteOpticalEncoder_Apart[2][1])AbsoluteOpticalEncoder_Apart[1][1] = AbsoluteOpticalEncoder_Apart[2][0] = AbsoluteOpticalEncoder_Apart[2][1];
-        if (AbsoluteOpticalEncoder_Apart[1][0] > AbsoluteOpticalEncoder_Apart[1][1])AbsoluteOpticalEncoder_Apart[1][1] = AbsoluteOpticalEncoder_Apart[2][0] = AbsoluteOpticalEncoder_Apart[0][1];
-        break;
-    case 0x0003: AbsoluteOpticalEncoder_Apart[2][1] = AbsoluteOpticalEncoder_Apart[3][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[3][0] > AbsoluteOpticalEncoder_Apart[3][1])AbsoluteOpticalEncoder_Apart[2][1] = AbsoluteOpticalEncoder_Apart[3][0] = AbsoluteOpticalEncoder_Apart[3][1];
-        if (AbsoluteOpticalEncoder_Apart[2][0] > AbsoluteOpticalEncoder_Apart[2][1])AbsoluteOpticalEncoder_Apart[2][1] = AbsoluteOpticalEncoder_Apart[3][0] = AbsoluteOpticalEncoder_Apart[1][1];
-        break;
-    case 0x0004: AbsoluteOpticalEncoder_Apart[3][1] = AbsoluteOpticalEncoder_Apart[4][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[4][0] > AbsoluteOpticalEncoder_Apart[4][1])AbsoluteOpticalEncoder_Apart[3][1] = AbsoluteOpticalEncoder_Apart[4][0] = AbsoluteOpticalEncoder_Apart[4][1];
-        if (AbsoluteOpticalEncoder_Apart[3][0] > AbsoluteOpticalEncoder_Apart[3][1])AbsoluteOpticalEncoder_Apart[3][1] = AbsoluteOpticalEncoder_Apart[4][0] = AbsoluteOpticalEncoder_Apart[2][1];
-        break;
-    case 0x0005: AbsoluteOpticalEncoder_Apart[4][1] = AbsoluteOpticalEncoder_Apart[5][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[5][0] > AbsoluteOpticalEncoder_Apart[5][1])AbsoluteOpticalEncoder_Apart[4][1] = AbsoluteOpticalEncoder_Apart[5][0] = AbsoluteOpticalEncoder_Apart[5][1];
-        if (AbsoluteOpticalEncoder_Apart[4][0] > AbsoluteOpticalEncoder_Apart[4][1])AbsoluteOpticalEncoder_Apart[4][1] = AbsoluteOpticalEncoder_Apart[5][0] = AbsoluteOpticalEncoder_Apart[3][1];
-        break;
-    case 0x0006: AbsoluteOpticalEncoder_Apart[5][1] = AbsoluteOpticalEncoder_Apart[6][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[6][0] > AbsoluteOpticalEncoder_Apart[6][1])AbsoluteOpticalEncoder_Apart[5][1] = AbsoluteOpticalEncoder_Apart[6][0] = AbsoluteOpticalEncoder_Apart[6][1];
-        if (AbsoluteOpticalEncoder_Apart[5][0] > AbsoluteOpticalEncoder_Apart[5][1])AbsoluteOpticalEncoder_Apart[5][1] = AbsoluteOpticalEncoder_Apart[6][0] = AbsoluteOpticalEncoder_Apart[4][1];
-        break;
-    case 0x0007: AbsoluteOpticalEncoder_Apart[6][1] = AbsoluteOpticalEncoder_Apart[7][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        if (AbsoluteOpticalEncoder_Apart[7][0] > AbsoluteOpticalEncoder_Apart[7][1])AbsoluteOpticalEncoder_Apart[6][1] = AbsoluteOpticalEncoder_Apart[7][0] = AbsoluteOpticalEncoder_Apart[7][1];
-        if (AbsoluteOpticalEncoder_Apart[6][0] > AbsoluteOpticalEncoder_Apart[6][1])AbsoluteOpticalEncoder_Apart[6][1] = AbsoluteOpticalEncoder_Apart[7][0] = AbsoluteOpticalEncoder_Apart[5][1];
-        break;
-    case 0x0008: AbsoluteOpticalEncoder_Apart[7][1] = AbsoluteOpticalEncoder_Apart[0][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
-        //if (AbsoluteOpticalEncoder_Apart[0][0] > AbsoluteOpticalEncoder_Apart[0][1])AbsoluteOpticalEncoder_Apart[7][1] = AbsoluteOpticalEncoder_Apart[0][0] = AbsoluteOpticalEncoder_Apart[0][1];
-        if (AbsoluteOpticalEncoder_Apart[7][0] > AbsoluteOpticalEncoder_Apart[7][1])AbsoluteOpticalEncoder_Apart[7][1] = AbsoluteOpticalEncoder_Apart[0][0] = AbsoluteOpticalEncoder_Apart[6][1];
-
-break;
-    case 0x0050: WifiRESTFlag = 1; break;
-    case 0x0051: WifiConfigFlag = 1; break;
+    case 0x0091: {AbsoluteOpticalEncoder_Apart[8][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0010: {AbsoluteOpticalEncoder_Apart[0][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(0, 1); break;}
+    case 0x0011: {AbsoluteOpticalEncoder_Apart[0][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0020: {AbsoluteOpticalEncoder_Apart[1][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(1, 1); break;}
+    case 0x0021: {AbsoluteOpticalEncoder_Apart[1][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0030: {AbsoluteOpticalEncoder_Apart[2][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(2, 1); break;}
+    case 0x0031: {AbsoluteOpticalEncoder_Apart[2][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0040: {AbsoluteOpticalEncoder_Apart[3][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(3, 1); break;}
+    case 0x0041: {AbsoluteOpticalEncoder_Apart[3][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0050: {AbsoluteOpticalEncoder_Apart[4][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(4, 1); break;}
+    case 0x0051: {AbsoluteOpticalEncoder_Apart[4][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0060: {AbsoluteOpticalEncoder_Apart[5][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(5, 1); break;}
+    case 0x0061: {AbsoluteOpticalEncoder_Apart[5][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0070: {AbsoluteOpticalEncoder_Apart[6][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(6, 1); break;}
+    case 0x0071: {AbsoluteOpticalEncoder_Apart[6][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0080: {AbsoluteOpticalEncoder_Apart[7][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(7, 1); break;}
+    case 0x0081: {AbsoluteOpticalEncoder_Apart[7][1] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); }
+    case 0x0090: {AbsoluteOpticalEncoder_Apart[8][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)); Data_Send_EncoderApartStatus(8, 1); break;}
+    case 0x0202: WifiRESTFlag = 1; Sys_Printf(USART2, "\r\n WifiRESTFlag"); break;
+    case 0x0203: WifiConfigFlag = 1; Sys_Printf(USART2, "\r\n WifiConfigFlag"); break;
+		case 0x0204: WifiConfigFlag = 1; Sys_Printf(USART2, "\r\n WifiConfigFlag"); break;
+		
     default: break;
     }
-//    for (int i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
-//    {
-//        if (AbsoluteOpticalEncoder_Apart[i][0] > AbsoluteOpticalEncoder_Apart[i][1])
-//            AbsoluteOpticalEncoder_Apart[i][0] = AbsoluteOpticalEncoder_Apart[i][1];
-//        AbsoluteOpticalEncoder_Apart[turn(i - 1, AbsoluteOpticalEncoderNUM)][i] = AbsoluteOpticalEncoder_Apart[i][0];
-//    }
+    Data_Save(2);
 
-    Data_Send_EncoderApartStatus();
-    Sys_Printf(USART2, "\r\n %d", ((u16)((vs16)(*(data_buf + 4)) << 8) | *(data_buf + 5)));
+    // Sys_Printf(USART2, "\r\n %d", ((((vs16)(*(data_buf + 4)) << 8)&0xff)  | *(data_buf + 5)));
+    //Sys_Printf(USART2, "\r\n %d", *(data_buf + 5));
+
     return;
 }
+// void UsrtScreenAnl(u8 *data_buf)
+// {
+//     switch ((u16)((vs16)(*(data_buf + 4)) << 8) | *(data_buf + 5))
+//     {
+//     case 0x0001:
+//         AbsoluteOpticalEncoder_Apart[0][1] = AbsoluteOpticalEncoder_Apart[1][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         //if (AbsoluteOpticalEncoder_Apart[1][0] > AbsoluteOpticalEncoder_Apart[1][1]) AbsoluteOpticalEncoder_Apart[0][1] = AbsoluteOpticalEncoder_Apart[1][0] = AbsoluteOpticalEncoder_Apart[1][1];
+//         break;
+//     case 0x0002: AbsoluteOpticalEncoder_Apart[1][1] = AbsoluteOpticalEncoder_Apart[2][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         if (AbsoluteOpticalEncoder_Apart[2][0] > AbsoluteOpticalEncoder_Apart[2][1])AbsoluteOpticalEncoder_Apart[1][1] = AbsoluteOpticalEncoder_Apart[2][0] = AbsoluteOpticalEncoder_Apart[2][1];
+//         if (AbsoluteOpticalEncoder_Apart[1][0] > AbsoluteOpticalEncoder_Apart[1][1])AbsoluteOpticalEncoder_Apart[1][1] = AbsoluteOpticalEncoder_Apart[2][0] = AbsoluteOpticalEncoder_Apart[0][1];
+//         break;
+//     case 0x0003: AbsoluteOpticalEncoder_Apart[2][1] = AbsoluteOpticalEncoder_Apart[3][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         if (AbsoluteOpticalEncoder_Apart[3][0] > AbsoluteOpticalEncoder_Apart[3][1])AbsoluteOpticalEncoder_Apart[2][1] = AbsoluteOpticalEncoder_Apart[3][0] = AbsoluteOpticalEncoder_Apart[3][1];
+//         if (AbsoluteOpticalEncoder_Apart[2][0] > AbsoluteOpticalEncoder_Apart[2][1])AbsoluteOpticalEncoder_Apart[2][1] = AbsoluteOpticalEncoder_Apart[3][0] = AbsoluteOpticalEncoder_Apart[1][1];
+//         break;
+//     case 0x0004: AbsoluteOpticalEncoder_Apart[3][1] = AbsoluteOpticalEncoder_Apart[4][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         if (AbsoluteOpticalEncoder_Apart[4][0] > AbsoluteOpticalEncoder_Apart[4][1])AbsoluteOpticalEncoder_Apart[3][1] = AbsoluteOpticalEncoder_Apart[4][0] = AbsoluteOpticalEncoder_Apart[4][1];
+//         if (AbsoluteOpticalEncoder_Apart[3][0] > AbsoluteOpticalEncoder_Apart[3][1])AbsoluteOpticalEncoder_Apart[3][1] = AbsoluteOpticalEncoder_Apart[4][0] = AbsoluteOpticalEncoder_Apart[2][1];
+//         break;
+//     case 0x0005: AbsoluteOpticalEncoder_Apart[4][1] = AbsoluteOpticalEncoder_Apart[5][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         if (AbsoluteOpticalEncoder_Apart[5][0] > AbsoluteOpticalEncoder_Apart[5][1])AbsoluteOpticalEncoder_Apart[4][1] = AbsoluteOpticalEncoder_Apart[5][0] = AbsoluteOpticalEncoder_Apart[5][1];
+//         if (AbsoluteOpticalEncoder_Apart[4][0] > AbsoluteOpticalEncoder_Apart[4][1])AbsoluteOpticalEncoder_Apart[4][1] = AbsoluteOpticalEncoder_Apart[5][0] = AbsoluteOpticalEncoder_Apart[3][1];
+//         break;
+//     case 0x0006: AbsoluteOpticalEncoder_Apart[5][1] = AbsoluteOpticalEncoder_Apart[6][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         if (AbsoluteOpticalEncoder_Apart[6][0] > AbsoluteOpticalEncoder_Apart[6][1])AbsoluteOpticalEncoder_Apart[5][1] = AbsoluteOpticalEncoder_Apart[6][0] = AbsoluteOpticalEncoder_Apart[6][1];
+//         if (AbsoluteOpticalEncoder_Apart[5][0] > AbsoluteOpticalEncoder_Apart[5][1])AbsoluteOpticalEncoder_Apart[5][1] = AbsoluteOpticalEncoder_Apart[6][0] = AbsoluteOpticalEncoder_Apart[4][1];
+//         break;
+//     case 0x0007: AbsoluteOpticalEncoder_Apart[6][1] = AbsoluteOpticalEncoder_Apart[7][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         if (AbsoluteOpticalEncoder_Apart[7][0] > AbsoluteOpticalEncoder_Apart[7][1])AbsoluteOpticalEncoder_Apart[6][1] = AbsoluteOpticalEncoder_Apart[7][0] = AbsoluteOpticalEncoder_Apart[7][1];
+//         if (AbsoluteOpticalEncoder_Apart[6][0] > AbsoluteOpticalEncoder_Apart[6][1])AbsoluteOpticalEncoder_Apart[6][1] = AbsoluteOpticalEncoder_Apart[7][0] = AbsoluteOpticalEncoder_Apart[5][1];
+//         break;
+//     case 0x0008: AbsoluteOpticalEncoder_Apart[7][1] = AbsoluteOpticalEncoder_Apart[0][0] = ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8));
+//         //if (AbsoluteOpticalEncoder_Apart[0][0] > AbsoluteOpticalEncoder_Apart[0][1])AbsoluteOpticalEncoder_Apart[7][1] = AbsoluteOpticalEncoder_Apart[0][0] = AbsoluteOpticalEncoder_Apart[0][1];
+//         if (AbsoluteOpticalEncoder_Apart[7][0] > AbsoluteOpticalEncoder_Apart[7][1])AbsoluteOpticalEncoder_Apart[7][1] = AbsoluteOpticalEncoder_Apart[0][0] = AbsoluteOpticalEncoder_Apart[6][1];
+
+// break;
+//     case 0x0050: WifiRESTFlag = 1; break;
+//     case 0x0051: WifiConfigFlag = 1; break;
+//     default: break;
+//     }
+//      Data_Save(2);
+//     Data_Send_EncoderApartStatus();
+//     Sys_Printf(USART2, "\r\n %d", ((u16)((vs16)(*(data_buf + 4)) << 8) | *(data_buf + 5)));
+//     return;
+// }
 void Data_Exchange(void)
 {
 #ifdef DATA_TRANSFER_USE_SPI_NRF
