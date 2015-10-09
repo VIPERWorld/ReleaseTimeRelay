@@ -1,0 +1,8 @@
+R1=05      ;波特率,05=38400
+R2=0B      ;Sys_CFG
+R3=5A      ;
+R8=5      ;
+RA=A5      ;
+STOP_DWIN_OS;
+RC=00      ;
+
