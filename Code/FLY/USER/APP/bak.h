@@ -9,7 +9,8 @@ void DataSaveInit(void);
 void Data_Save(u8 select);
 int Data_Read(void);
 int StmFlash_Read(void);
-void StmFlash_Save(void);
+void StmFlash_Save(u8 );
+				 
 #ifdef __cplusplus
         }
 #endif

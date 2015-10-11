@@ -27,6 +27,8 @@ typedef struct
     vs8  w_month;
     vs8  w_date;  
 } TIME_S;
+#define KEYLISTLEN (5)//几个临时密钥
+extern u32 TimeKeyWordList[KEYLISTLEN];
 extern _calendar_obj TimeUnlockEx;
 extern TIME_S DeathTime;
 extern int TimeUnlockFlag;
@@ -38,15 +40,19 @@ extern int TimeUnlockFlag;
 extern int WifiConfigFlag;
 extern int WifiRESTFlag;
 extern int breakENTMFlag;
+extern _Uu32u8 ZipTime;//压缩后的时间
+
 
 extern u16 u16FreeTime;//屏幕空闲时间计数
+extern u16 CurPID_ID;//当前屏幕ID(位于哪一页)
 
 extern void Data_Send_EncoderApartStatus(int i, int j);
 extern void Data_Send_VAL(u16 addr, u16 val);
 extern void Data_Send_VAL64(u16 addr, u32 val);
 extern void Data_Send_Reg1(u8 addr, u8 val);
 extern void Data_Send_Reg2(u8 addr, u16 val);
-
+extern void DataGetReg(u8 addr, u8 Len);
+extern void TimeUnZip(u32 tmp);
 
 
 

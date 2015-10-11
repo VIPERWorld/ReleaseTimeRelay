@@ -18,7 +18,7 @@
 #include "data_transfer.h"
 
 #include "bak.h"
-
+#include "pvd.h"
 void SYS_INIT(void)
 {
 	/***延时初始化***/
@@ -28,6 +28,7 @@ void SYS_INIT(void)
 	uart_init (38400);
 	uart2_init(115200);
 	uart3_init(115200);
+	//PvdInit();
 	Sys_Printf(USART1, (char *)"USART USARTSCREEN\r\n");
 	Sys_Printf(USART2, (char *)"USART2 DEBUG_UARTNUM\r\n");
 	Sys_Printf(USART3, (char *)"USART3 UARTWIFIUARTNUM\r\n");
@@ -39,44 +40,69 @@ void SYS_INIT(void)
 
 void SendTime()//从串口发送时间(当天时间 剩余时间)
 {
-    Data_Send_VAL(0x0300, calendar.w_year);
-    Data_Send_VAL(0x0301, calendar.w_month);
-    Data_Send_VAL(0x0302, calendar.w_date);
-    Data_Send_VAL(0x0303, calendar.hour);
-    Data_Send_VAL(0x0304, calendar.min);
-    Data_Send_VAL(0x0305, calendar.sec);
+	Data_Send_VAL(0x0300, calendar.w_year);
+	Data_Send_VAL(0x0301, calendar.w_month);
+	Data_Send_VAL(0x0302, calendar.w_date);
+	Data_Send_VAL(0x0303, calendar.hour);
+	Data_Send_VAL(0x0304, calendar.min);
+	Data_Send_VAL(0x0305, calendar.sec);
 
-    DeathTime.w_year  = calendar.w_year  - TimeUnlockEx.w_year;
-    DeathTime.w_month = calendar.w_month - TimeUnlockEx.w_month;
-    DeathTime.w_date  = calendar.w_date  - TimeUnlockEx.w_date;
-    DeathTime.hour    = calendar.hour    - TimeUnlockEx.hour;
-    DeathTime.min     = calendar.min     - TimeUnlockEx.min;
-    DeathTime.sec     = calendar.sec     - TimeUnlockEx.sec;
+	DeathTime.w_year  = TimeUnlockEx.w_year  - calendar.w_year;
+	DeathTime.w_month = TimeUnlockEx.w_month - calendar.w_month;
+	DeathTime.w_date  = TimeUnlockEx.w_date  - calendar.w_date;
+	DeathTime.hour    = TimeUnlockEx.hour    - calendar.hour;
+	DeathTime.min     = TimeUnlockEx.min     - calendar.min;
+	DeathTime.sec     = TimeUnlockEx.sec     - calendar.sec;
 
-    Data_Send_VAL(0x0310, DeathTime.w_year);
-    Data_Send_VAL(0x0311, DeathTime.w_month);
-    Data_Send_VAL(0x0312, DeathTime.w_date);
-    Data_Send_VAL(0x0313, DeathTime.hour);
-    Data_Send_VAL(0x0314, DeathTime.min);
-    Data_Send_VAL(0x0315, DeathTime.sec);
+	Data_Send_VAL(0x0310, TimeUnlockEx.w_year);
+	Data_Send_VAL(0x0311, TimeUnlockEx.w_month);
+	Data_Send_VAL(0x0312, TimeUnlockEx.w_date);
+	Data_Send_VAL(0x0313, TimeUnlockEx.hour);
+	Data_Send_VAL(0x0314, TimeUnlockEx.min);
+	Data_Send_VAL(0x0315, TimeUnlockEx.sec);
 }
 
-int IsUnlock()
+int IsUnlock()//0上锁 1解锁
 {
-    if (DeathTime.w_year < 0)
-        return 0;
-    else if (DeathTime.w_month < 0)
-        return 0;
-    else if (DeathTime.w_date < 0)
-        return 0;
-    else if (DeathTime.hour < 0)
-        return 0;
-    else if (DeathTime.min < 0)
-        return 0;
-    else if (DeathTime.sec < 0)
-        return 0;
-    else
-        return 1;
+	if (DeathTime.w_year > 0)
+		return 1;
+	else if (DeathTime.w_year < 0)
+		return 0;
+	else
+	{
+		if (DeathTime.w_month > 0)
+			return 1;
+		else if (DeathTime.w_month < 0)
+			return 0;
+		else
+		{
+			if (DeathTime.w_date > 0)
+				return 1;
+			else if (DeathTime.w_date < 0)
+				return 0;
+			else
+			{
+				if (DeathTime.hour > 0)
+					return 1;
+				else if (DeathTime.hour < 0)
+					return 0;
+				else
+				{
+					if (DeathTime.min > 0)
+						return 1;
+					else if (DeathTime.min < 0)
+						return 0;
+					else
+					{
+						if (DeathTime.sec > 0)
+							return 1;
+						else
+							return 0;
+					}
+				}
+			}
+		}
+	}
 }
 u16 task_rtc(void)
 {
@@ -98,9 +124,9 @@ u16 task_rtc(void)
 		WaitX(1000);
 		unsigned char time[24];
 		get_time((u8 *)time);
-		Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC: %s",time);
+		//Sys_Printf(DEBUG_UARTNUM, (char *)"\r\n RTC: %s",time);
 		SendTime();
-		if (1==IsUnlock())//判断是否解锁（是否还有剩余时间）
+		if (1 == IsUnlock()) //判断是否解锁（是否还有剩余时间）
 		{
 			TimeUnlockFlag = 1;
 		}
@@ -137,6 +163,20 @@ void RelayControlOff(void)
 	RELAY9_OFF;
 	RELAY10_OFF;
 }
+void RelayControlOn(void)
+{
+	RELAY0_ON;
+	RELAY1_ON;
+	RELAY2_ON;
+	RELAY3_ON;
+	RELAY4_ON;
+	RELAY5_ON;
+	RELAY6_ON;
+	RELAY7_ON;
+	RELAY8_ON;
+	RELAY9_ON;
+	RELAY10_ON;
+}
 
 #include "EXTI.h"
 int TaskRelay(void)
@@ -165,10 +205,10 @@ int TaskRelay(void)
 	EXTI_Configuration(GPIOB, GPIO_Pin_7, 0);// 表示作为外部中断 0下降沿触发
 	EXTI_Configuration(GPIOB, GPIO_Pin_8, 0);// 表示作为外部中断 0下降沿触发 1上升沿
 	EXTI_Configuration(GPIOB, GPIO_Pin_9, 2);// 表示作为外部中断 2上升和下降沿触发
-	EXTI_NVIC_Configuration(6, 2, 0, 0);//-
+	EXTI_NVIC_Configuration(6, 2, 1, 1);//-
 	EXTI_NVIC_Configuration(7, 2, 1, 1);//+
-	EXTI_NVIC_Configuration(8, 2, 0, 0);//0
-	EXTI_NVIC_Configuration(9, 2, 0, 0);//光电开关
+	EXTI_NVIC_Configuration(8, 2, 1, 1);//0
+	EXTI_NVIC_Configuration(9, 2, 1, 1);//光电开关
 
 	while (1)
 	{
@@ -232,8 +272,8 @@ const char *ATCommandList[CONFIGSUMNUM][3] = {
 	},
 	{
 		"AT+ATRM=?",
-		"OK=0,0,\"192.168.5.110\",4001",
-		"AT+ATRM=0,0,\"192.168.5.110\",4001"
+		"OK=0,0,\"192.168.31.158\",8080",
+		"AT+ATRM=0,0,\"192.168.31.158\",8080"
 	}
 };
 
@@ -381,32 +421,45 @@ int TaskUsrtWifi(void)
 }
 void DisPlaySendLock(void)//发送指令返回锁定界面
 {
-	Data_Send_Reg2(0x03,0x02);
+	Data_Send_Reg2(0x03, 0x00);
 	return;
 }
-void DisPlaySendUnLock(void)//发送指令返回锁定界面
+void DisPlayGetCurPID_ID(void)
 {
-	Data_Send_Reg2(0x03,0x01);
-	return;
+	DataGetReg(0x03, 0x02);
 }
-#define FREETIME 10 //定义当多久没操控触摸屏后退出控制界面(s)
+
+#define FREETIME 60 //定义当多久没操控触摸屏后退出控制界面(s)
 int TaskControl(void)
 {
 	_SS
-		static int i;
+	static int i;
+	StmFlash_Read();
 	for ( i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
 	{
 		WaitX(20);
 		for (int j = 0; j < 2; ++j)
 			Data_Send_EncoderApartStatus(i, j);
 	}
-	Data_Send_VAL(0x0200, AbsoluteOpticalEncoder_VAL);//发送屏幕默认值
+	Data_Send_VAL(0x0001, AbsoluteOpticalEncoder_VAL);//发送屏幕默认值
 	for (;;)
 	{
 		WaitX(1000);
 		u16FreeTime++;
-//		if(u16FreeTime>FREETIME)
-//			DisPlaySendLock();
+		if (u16FreeTime > FREETIME)
+		{
+			DisPlayGetCurPID_ID();//得到当前界面ID;
+		}
+		if (u16FreeTime > (FREETIME + 1))
+		{
+			if (9 == CurPID_ID)
+			{
+				//DisPlaySendLock();
+				u16FreeTime = 0;
+			}
+			else
+				u16FreeTime = u16FreeTime / 2;
+		}
 		{
 			static int i;
 			for ( i = 0; i < AbsoluteOpticalEncoderNUM; ++i)
@@ -417,9 +470,8 @@ int TaskControl(void)
 					Data_Send_EncoderApartStatus(i, j);
 				}
 			}
-			Data_Send_VAL(0x0200, AbsoluteOpticalEncoder_VAL);
+			Data_Send_VAL(0x0001, AbsoluteOpticalEncoder_VAL);
 		}//每隔一秒钟更新数据
-			
 	}
 	_EE
 }
