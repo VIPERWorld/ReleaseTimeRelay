@@ -143,7 +143,7 @@ void RelayControl(void)
 	if (RelayStata[0]) {RELAY0_ON;} else {RELAY0_OFF;}
 	if (RelayStata[1]) {RELAY1_ON;} else {RELAY1_OFF;}
 	if (RelayStata[2]) {RELAY2_ON;} else {RELAY2_OFF;}
-	if (RelayStata[3]) {RELAY3_ON;} else {RELAY3_OFF;}
+	if (RelayStata[3]&&(1==GUANG_DIAN)) {RELAY3_ON;} else {RELAY3_OFF;}
 	if (RelayStata[4]) {RELAY4_ON;} else {RELAY4_OFF;}
 	if (RelayStata[5]) {RELAY5_ON;} else {RELAY5_OFF;}
 	if (RelayStata[6]) {RELAY6_ON;} else {RELAY6_OFF;}
