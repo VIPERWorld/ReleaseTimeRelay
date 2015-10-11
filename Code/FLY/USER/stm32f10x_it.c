@@ -18,14 +18,14 @@ extern void SysUart3RxIqr(void);
 
 void guandian()//B9
 {
-	if (1 == B9)
-	{
-		RELAY10_OFF;
-	}
-	else
-	{
-		RELAY10_ON;
-	}
+//	if (1 == GUANG_DIAN)
+//	{
+//		RELAY10_OFF;
+//	}
+//	else
+//	{
+//		RELAY10_ON;
+//	}
 }
 void AbsoluteOpticalEncoderInOut1(void)//B6//编码器加
 {
