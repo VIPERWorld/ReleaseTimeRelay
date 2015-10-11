@@ -61,7 +61,26 @@ void SendTime()//从串口发送时间(当天时间 剩余时间)
 	Data_Send_VAL(0x0314, TimeUnlockEx.min);
 	Data_Send_VAL(0x0315, TimeUnlockEx.sec);
 }
+int IsLessTime()
+{
+	_calendar_obj tmp = {0};
+	_calendar_obj tmp2 = {0};
 
+	tmp.w_year  = TimeUnlockEx.w_year;
+	tmp.w_month = TimeUnlockEx.w_month;
+	tmp.w_date  = TimeUnlockEx.w_date;
+	tmp.hour    = TimeUnlockEx.hour;
+	tmp.min     = TimeUnlockEx.min;
+
+	tmp2.w_year  = calendar.w_year;
+	tmp2.w_month = calendar.w_month;
+	tmp2.w_date  = calendar.w_date;
+	tmp2.hour    = calendar.hour;
+	tmp2.min     = calendar.min;
+
+	return (RTCCale2Sec(tmp) - RTCCale2Sec(tmp2) ) / 86400;
+
+}
 int IsUnlock()//0上锁 1解锁
 {
 	if (DeathTime.w_year > 0)
@@ -143,7 +162,7 @@ void RelayControl(void)
 	if (RelayStata[0]) {RELAY0_ON;} else {RELAY0_OFF;}
 	if (RelayStata[1]) {RELAY1_ON;} else {RELAY1_OFF;}
 	if (RelayStata[2]) {RELAY2_ON;} else {RELAY2_OFF;}
-	if (RelayStata[3]&&(1==GUANG_DIAN)) {RELAY3_ON;} else {RELAY3_OFF;}
+	if (RelayStata[3] && (1 == GUANG_DIAN)) {RELAY3_ON;} else {RELAY3_OFF;}
 	if (RelayStata[4]) {RELAY4_ON;} else {RELAY4_OFF;}
 	if (RelayStata[5]) {RELAY5_ON;} else {RELAY5_OFF;}
 	if (RelayStata[6]) {RELAY6_ON;} else {RELAY6_OFF;}
@@ -217,11 +236,12 @@ int TaskRelay(void)
 		{
 			for (int i = 0; i < AbsoluteOpticalEncoderNUM ; ++i)
 			{
+				//区间为左开右闭//增区间
 				if (AbsoluteOpticalEncoder_Apart[i][0] < AbsoluteOpticalEncoder_Apart[i][1])
 				{
 					if (
 					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
-					    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][1])
+					    (AbsoluteOpticalEncoder_VAL <= AbsoluteOpticalEncoder_Apart[i][1])
 					)
 					{
 						RelayStata[i] = 1;
@@ -234,8 +254,8 @@ int TaskRelay(void)
 				else
 				{
 					if (
-					    (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_Apart[i][0]) &&
-					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][1])
+					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) ||
+					    (AbsoluteOpticalEncoder_VAL <= AbsoluteOpticalEncoder_Apart[i][1])
 					)
 					{
 						RelayStata[i] = 1;
@@ -428,8 +448,18 @@ void DisPlayGetCurPID_ID(void)
 {
 	DataGetReg(0x03, 0x02);
 }
+void DisPlaySendWorning(void)//发送指令返回锁定界面
+{
+	Data_Send_Reg2(0x03, 10);
+	return;
+}
+void DisPlaySendNoWorning(void)//发送指令返回锁定界面
+{
+	Data_Send_Reg2(0x03, 9);
+	return;
+}
 
-#define FREETIME 60 //定义当多久没操控触摸屏后退出控制界面(s)
+#define FREETIME 1 //定义当多久没操控触摸屏后退出控制界面(s)
 int TaskControl(void)
 {
 	_SS
@@ -445,6 +475,7 @@ int TaskControl(void)
 	for (;;)
 	{
 		WaitX(1000);
+
 		u16FreeTime++;
 		if (u16FreeTime > FREETIME)
 		{
@@ -452,14 +483,27 @@ int TaskControl(void)
 		}
 		if (u16FreeTime > (FREETIME + 1))
 		{
-			if (9 == CurPID_ID)
+			if ((9 == CurPID_ID))
 			{
-				//DisPlaySendLock();
-				u16FreeTime = 0;
+				if (IsLessTime() < 15)
+				{
+					DisPlaySendWorning();//发送警告
+					u16FreeTime = 0;
+				}
+			}
+			else if ((10 == CurPID_ID))
+			{
+				if (IsLessTime() > 15)
+				{
+					DisPlaySendNoWorning();//消除警告
+					u16FreeTime = 0;
+				}
 			}
 			else
+
 				u16FreeTime = u16FreeTime / 2;
 		}
+
 		{
 			static int i;
 			for ( i = 0; i < AbsoluteOpticalEncoderNUM; ++i)

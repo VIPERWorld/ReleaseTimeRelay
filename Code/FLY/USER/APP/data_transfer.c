@@ -32,6 +32,7 @@ int WifiRESTFlag   = 0;//wifi重置命令标志
 int breakENTMFlag  = 0;//跳出透明传输标志
 u16 u16FreeTime = 0; //屏幕空闲时间计数
 _Uu32u8 ZipTime;//压缩后的时间
+u8 DisPlayUnLockFlag = 0; //屏幕解锁标志 1为解锁
 
 u32 TimeZip(void)
 {
@@ -396,29 +397,30 @@ void UsrtScreenAnl(u8 *data_buf)
             if (DisPlayPasswd    == ((u16)((vs16)(*(data_buf + 7)) << 8) | *(data_buf + 8)))
             {
                 DisPlaySendUnLock();
+                DisPlayUnLockFlag = 1;
             }
         } break;
         case 0x0205:
         {
             for (int i = 0; i < KEYLISTLEN; i++)
             {
-							_Uu32u8 tmp;
-							tmp.u8[3]=*(data_buf + 7);
-							tmp.u8[2]=*(data_buf + 8);
-							tmp.u8[1]=*(data_buf + 9);
-							tmp.u8[0]=*(data_buf + 10);
-							
-							if(26==AbsoluteOpticalEncoder_VAL)
-							{
-							TimeKeyWordList[0]=12345678;
-							TimeKeyWordList[1]=23456789;
-							TimeKeyWordList[2]=34567891;
-							TimeKeyWordList[3]=45678901;
-							TimeKeyWordList[4]=56789012;
-								StmFlash_Save(3);
-							}
-							
-							
+                _Uu32u8 tmp;
+                tmp.u8[3] = *(data_buf + 7);
+                tmp.u8[2] = *(data_buf + 8);
+                tmp.u8[1] = *(data_buf + 9);
+                tmp.u8[0] = *(data_buf + 10);
+
+                if (26 == AbsoluteOpticalEncoder_VAL)
+                {
+                    TimeKeyWordList[0] = 11111111;
+                    TimeKeyWordList[1] = 22222222;
+                    TimeKeyWordList[2] = 33333333;
+                    TimeKeyWordList[3] = 44444444;
+                    TimeKeyWordList[4] = 55555555;
+                    StmFlash_Save(3);
+                }
+
+
                 if (TimeKeyWordList[i] == tmp.u32)
                 {
                     _calendar_obj tmp = {0};
@@ -427,21 +429,21 @@ void UsrtScreenAnl(u8 *data_buf)
                     tmp.w_date  = TimeUnlockEx.w_date;
                     tmp.hour    = TimeUnlockEx.hour;
                     tmp.min     = TimeUnlockEx.min;
-										
-										TimeKeyWordList[i]=0;
-										StmFlash_Save(3);
-										StmFlash_Read();
-                    RTCSec2Cale(&tmp, RTCCale2Sec(tmp) + 86400, 1);
+
+                    TimeKeyWordList[i] = 0;
+                    StmFlash_Save(3);
+                    StmFlash_Read();
+                    RTCSec2Cale(&tmp, RTCCale2Sec(tmp) + 86400 * 3, 1);
 
                     TimeUnlockEx.w_year  = tmp.w_year;
                     TimeUnlockEx.w_month = tmp.w_month;
                     TimeUnlockEx.w_date  = tmp.w_date;
                     TimeUnlockEx.hour    = tmp.hour;
                     TimeUnlockEx.min     = tmp.min;
-										
-    ZipTime.u32 = TimeZip();
-    TimeUnZip(ZipTime.u32);
-    StmFlash_Save(1);
+
+                    ZipTime.u32 = TimeZip();
+                    TimeUnZip(ZipTime.u32);
+                    StmFlash_Save(1);
                     break;
                 }
             }

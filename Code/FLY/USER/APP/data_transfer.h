@@ -41,6 +41,7 @@ extern int WifiConfigFlag;
 extern int WifiRESTFlag;
 extern int breakENTMFlag;
 extern _Uu32u8 ZipTime;//压缩后的时间
+extern u8 DisPlayUnLockFlag;//屏幕解锁标志 1为解锁
 
 
 extern u16 u16FreeTime;//屏幕空闲时间计数
