@@ -206,9 +206,9 @@ int TaskRelay(void)
 	RELAY2_INIT; RELAY2_OFF;
 	RELAY3_INIT; RELAY3_OFF;
 	RELAY4_INIT; RELAY4_OFF;
-	//RELAY5_INIT; RELAY5_OFF;
+//  RELAY5_INIT; RELAY5_OFF;
 //	RELAY6_INIT; RELAY6_OFF;
-	//RELAY7_INIT; RELAY7_OFF;
+//  RELAY7_INIT; RELAY7_OFF;
 //	RELAY8_INIT; RELAY8_OFF;
 //	RELAY9_INIT; RELAY9_OFF;
 	RELAY10_INIT; RELAY10_OFF;
@@ -238,7 +238,7 @@ int TaskRelay(void)
 			{
 				//区间为左开右闭//增区间
 				if (AbsoluteOpticalEncoder_Apart[i][0] < AbsoluteOpticalEncoder_Apart[i][1])
-				{
+				{	
 					if (
 					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
 					    (AbsoluteOpticalEncoder_VAL <= AbsoluteOpticalEncoder_Apart[i][1])
