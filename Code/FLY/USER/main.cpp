@@ -519,6 +519,39 @@ int TaskControl(void)
 	}
 	_EE
 }
+#define ONLINE (1)   //在线
+#define NOTONLINE (0)//离线
+#define NOTONLINETHRESHOLD (0)//离线保活数据容错率 默认为零
+
+int taskKeepAlive(void)
+{
+	_SS
+	static u16 NotOnlineNum=0;
+	Data_Send_VAL(0x0206, NOTONLINE);//发送离线（默认）
+	for (;;)
+	{
+		WaitX(30000);
+		WaitX(30000);
+		WaitX(30000);
+		if(ONLINE==KeepAliveFlag)
+		{
+			NotOnlineNum=0;
+			KeepAliveFlag=0;
+			Data_Send_VAL(0x0206, ONLINE);//发送在线
+		}
+		else
+		{
+			NotOnlineNum++;
+		}
+		if(NotOnlineNum>NOTONLINETHRESHOLD)
+		{
+			NotOnlineNum=0;
+			KeepAliveFlag=0;
+			Data_Send_VAL(0x0206, NOTONLINE);//发送离线
+		}
+	}
+	_EE
+}
 int main(void)
 {
 	SYS_INIT();
@@ -529,5 +562,7 @@ int main(void)
 		RunTaskA(TaskRelay, 2);
 		RunTaskA(TaskUsrtWifi, 3);
 		RunTaskA(TaskControl, 4);
+		RunTaskA(taskKeepAlive, 5);
+		
 	}
 }

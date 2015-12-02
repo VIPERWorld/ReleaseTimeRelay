@@ -323,6 +323,8 @@ void DisPlaySendUnLock(void)//发送指令配置界面
 }
 
 #define HEX2DEC(x) ((x)/16*10+(x)%16)
+
+u8 KeepAliveFlag=0;
 void TcpAnl(u8 *data_buf)
 {
     RTC_Set(
@@ -341,9 +343,9 @@ void TcpAnl(u8 *data_buf)
     ZipTime.u32 = TimeZip();
     TimeUnZip(ZipTime.u32);
     StmFlash_Save(1);
+		KeepAliveFlag=1;
     Sys_sPrintf(DEBUG_UARTNUM, data_buf, 39);
     Sys_sPrintf(UARTWIFIUARTNUM, data_buf, 39);
-
 }
 void UsrtScreenAnl(u8 *data_buf)
 {

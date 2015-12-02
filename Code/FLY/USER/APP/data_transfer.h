@@ -47,6 +47,8 @@ extern u8 DisPlayUnLockFlag;//屏幕解锁标志 1为解锁
 extern u16 u16FreeTime;//屏幕空闲时间计数
 extern u16 CurPID_ID;//当前屏幕ID(位于哪一页)
 
+extern u8 KeepAliveFlag;
+
 extern void Data_Send_EncoderApartStatus(int i, int j);
 extern void Data_Send_VAL(u16 addr, u16 val);
 extern void Data_Send_VAL64(u16 addr, u32 val);
