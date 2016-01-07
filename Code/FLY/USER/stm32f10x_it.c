@@ -8,7 +8,7 @@ extern void SysUart2RxIqr(void);
 extern void SysUart3RxIqr(void);
 
 #include "data_transfer.h"
-#define AbsoluteOpticalEncoder_VALMax 360
+#define AbsoluteOpticalEncoder_VALMax 3600
 #define AbsoluteOpticalEncoder_VALMin 0
 
 #include "bak.h"
@@ -29,35 +29,35 @@ void guandian()//B9
 }
 void AbsoluteOpticalEncoderInOut1(void)//B6//编码器加
 {
-	if ((0 == B7))//在编码器减为零时
-	{
+//	if ((0 == B7))//在编码器减为零时
+//	{
 		++AbsoluteOpticalEncoder_VAL;
 		if (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_VALMax)
 		{
 			AbsoluteOpticalEncoder_VAL -= AbsoluteOpticalEncoder_VALMax;
 		}
 		Data_Save(1);
-	}
+//	}
 }
 void AbsoluteOpticalEncoderInOut2(void)//B7//编码器减
 {
-	if ((0 == B6))//在编码器减为零时
-	{
-		--AbsoluteOpticalEncoder_VAL;
-		if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
-		{
-			AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
-		}
-		Data_Save(1);
-	}
+	//if ((0 == B6))//在编码器减为零时
+	//{
+	//	--AbsoluteOpticalEncoder_VAL;
+	//	if (AbsoluteOpticalEncoder_VAL < AbsoluteOpticalEncoder_VALMin)
+	//	{
+	//		AbsoluteOpticalEncoder_VAL += AbsoluteOpticalEncoder_VALMax;
+	//	}
+	//	Data_Save(1);
+	//}
 }
 void AbsoluteOpticalEncoderInOut3(void)//B8//编码器清零
 {
-	if (1 == B7) //在编码器减为一时
-	{
+	//if (0 == B7) //在编码器减为一时
+	//{
 		AbsoluteOpticalEncoder_VAL = 1;
 		Data_Save(1);
-	}
+	//}
 }
 
 //void EXTI0_IRQHandler(void)

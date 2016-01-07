@@ -76,9 +76,9 @@ extern void TimeUnZip(u32 tmp);
 #define RELAY3_ON  Clr_B14
 #define RELAY3_INIT   PB14_OUT
 
-#define RELAY4_OFF //Set_B12
-#define RELAY4_ON  //Clr_B12
-#define RELAY4_INIT   //PB12_OUT
+#define RELAY4_OFF Set_B12
+#define RELAY4_ON  Clr_B12
+#define RELAY4_INIT   PB12_OUT
 
 #define RELAY5_OFF Set_A12
 #define RELAY5_ON  Clr_A12

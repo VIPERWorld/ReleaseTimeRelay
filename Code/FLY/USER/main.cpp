@@ -162,8 +162,10 @@ void RelayControl(void)
 	if (RelayStata[0]) {RELAY0_ON;} else {RELAY0_OFF;}
 	if (RelayStata[1]) {RELAY1_ON;} else {RELAY1_OFF;}
 	if (RelayStata[2]) {RELAY2_ON;} else {RELAY2_OFF;}
+	//if (RelayStata[3]) {RELAY3_ON;} else {RELAY3_OFF;}
 	if (RelayStata[3] && (1 == GUANG_DIAN)) {RELAY3_ON;} else {RELAY3_OFF;}
-	if (RelayStata[4]) {RELAY4_ON;} else {RELAY4_OFF;}
+	RELAY4_OFF//急停继电器
+	//if (RelayStata[4]) {RELAY4_ON;} else {RELAY4_OFF;}
 	if (RelayStata[5]) {RELAY5_ON;} else {RELAY5_OFF;}
 	if (RelayStata[6]) {RELAY6_ON;} else {RELAY6_OFF;}
 	if (RelayStata[7]) {RELAY7_ON;} else {RELAY7_OFF;}
@@ -174,7 +176,7 @@ void RelayControlOff(void)
 	RELAY1_OFF;
 	RELAY2_OFF;
 	RELAY3_OFF;
-	RELAY4_OFF;
+	RELAY4_ON;
 	RELAY5_OFF;
 	RELAY6_OFF;
 	RELAY7_OFF;
@@ -205,10 +207,10 @@ int TaskRelay(void)
 	RELAY1_INIT; RELAY1_OFF;
 	RELAY2_INIT; RELAY2_OFF;
 	RELAY3_INIT; RELAY3_OFF;
-	RELAY4_INIT; RELAY4_OFF;
-//  RELAY5_INIT; RELAY5_OFF;
+	RELAY4_INIT; RELAY4_ON;
+	//RELAY5_INIT; RELAY6_OFF;//
 //	RELAY6_INIT; RELAY6_OFF;
-//  RELAY7_INIT; RELAY7_OFF;
+	//RELAY7_INIT; RELAY7_OFF;
 //	RELAY8_INIT; RELAY8_OFF;
 //	RELAY9_INIT; RELAY9_OFF;
 	RELAY10_INIT; RELAY10_OFF;
@@ -238,7 +240,7 @@ int TaskRelay(void)
 			{
 				//区间为左开右闭//增区间
 				if (AbsoluteOpticalEncoder_Apart[i][0] < AbsoluteOpticalEncoder_Apart[i][1])
-				{	
+				{
 					if (
 					    (AbsoluteOpticalEncoder_VAL > AbsoluteOpticalEncoder_Apart[i][0]) &&
 					    (AbsoluteOpticalEncoder_VAL <= AbsoluteOpticalEncoder_Apart[i][1])
@@ -292,8 +294,10 @@ const char *ATCommandList[CONFIGSUMNUM][3] = {
 	},
 	{
 		"AT+ATRM=?",
-		"OK=0,0,\"192.168.1.109\",8080",
-		"AT+ATRM=0,0,\"192.168.1.109\",8080"
+		"OK=0,0,\"121.40.175.35\",18888",
+		"AT+ATRM=0,0,\"121.40.175.35\",18888"
+		//"OK=0,0,\"sa315473628.oicp.net\",23478",
+		//"AT+ATRM=0,0,\"sa315473628.oicp.net\",23478"
 	}
 };
 
@@ -451,6 +455,7 @@ void DisPlayGetCurPID_ID(void)
 void DisPlaySendWorning(void)//发送指令返回锁定界面
 {
 	Data_Send_Reg2(0x03, 10);
+  //Data_Send_Reg2(0x03, 10);
 	return;
 }
 void DisPlaySendNoWorning(void)//发送指令返回锁定界面
@@ -552,6 +557,36 @@ int taskKeepAlive(void)
 	}
 	_EE
 }
+
+int Keep(void)
+{
+	_SS
+	static u8 data_buf0[2]={0x01,0x01};
+	static u8 data_buf1[12]={0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x10,0x11};
+	static u8 data_buf2[8]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
+	static u8 data_buf3[2]={0x00,0x01};
+	static u8 data_buf4[6]={0x20,0x15,0x10,0x12,0x10,0x30};
+	static u8 data_buf5[2]={0x00,0x00};
+	static u8 data_buf6[1]={0x00};
+	while (1)
+	{
+		//for(i=0;i<=30;i++)
+		//{			
+			WaitX(60000);
+		//}
+		//Sys_Printf(UARTWIFIUARTNUM, (char *)"\r\n");
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf0, 2);
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf1, 12);
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf2, 8);
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf3, 2);
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf4, 6);
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf5, 2);
+		Sys_sPrintf(UARTWIFIUARTNUM, data_buf6, 1);
+	}
+	_EE
+}
+
+
 int main(void)
 {
 	SYS_INIT();
@@ -562,7 +597,7 @@ int main(void)
 		RunTaskA(TaskRelay, 2);
 		RunTaskA(TaskUsrtWifi, 3);
 		RunTaskA(TaskControl, 4);
-		RunTaskA(taskKeepAlive, 5);
-		
+		RunTaskA(Keep, 5);
+		RunTaskA(taskKeepAlive, 6);
 	}
 }
