@@ -343,7 +343,6 @@ void TcpAnl(u8 *data_buf)
     ZipTime.u32 = TimeZip();
     TimeUnZip(ZipTime.u32);
     StmFlash_Save(1);
-		KeepAliveFlag=1;
     Sys_sPrintf(DEBUG_UARTNUM, data_buf, 39);
     Sys_sPrintf(UARTWIFIUARTNUM, data_buf, 39);
 

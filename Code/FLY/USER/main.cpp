@@ -296,6 +296,8 @@ const char *ATCommandList[CONFIGSUMNUM][3] = {
 		"AT+ATRM=?",
 		"OK=0,0,\"121.40.175.35\",18888",
 		"AT+ATRM=0,0,\"121.40.175.35\",18888"
+//		"OK=0,0,\"192.168.1.111\",18888",
+//		"AT+ATRM=0,0,\"192.168.1.111\",18888"	
 		//"OK=0,0,\"sa315473628.oicp.net\",23478",
 		//"AT+ATRM=0,0,\"sa315473628.oicp.net\",23478"
 	}
@@ -524,9 +526,9 @@ int TaskControl(void)
 	}
 	_EE
 }
-#define ONLINE (1)   //在线
-#define NOTONLINE (0)//离线
-#define NOTONLINETHRESHOLD (0)//离线保活数据容错率 默认为零
+#define ONLINE (0)   //在线
+#define NOTONLINE (1)//离线
+#define NOTONLINETHRESHOLD (60)//离线保活数据容错率 默认为零
 
 int taskKeepAlive(void)
 {
@@ -535,10 +537,11 @@ int taskKeepAlive(void)
 	Data_Send_VAL(0x0206, NOTONLINE);//发送离线（默认）
 	for (;;)
 	{
-		WaitX(30000);
-		WaitX(30000);
-		WaitX(30000);
-		if(ONLINE==KeepAliveFlag)
+//		WaitX(30000);
+//		WaitX(30000);
+//		WaitX(30000);
+		WaitX(2000);
+		if(1==KeepAliveFlag)
 		{
 			NotOnlineNum=0;
 			KeepAliveFlag=0;
@@ -572,7 +575,7 @@ int Keep(void)
 	{
 		//for(i=0;i<=30;i++)
 		//{			
-			WaitX(60000);
+			
 		//}
 		//Sys_Printf(UARTWIFIUARTNUM, (char *)"\r\n");
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf0, 2);
@@ -582,6 +585,7 @@ int Keep(void)
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf4, 6);
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf5, 2);
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf6, 1);
+		WaitX(60000);
 	}
 	_EE
 }
