@@ -19,6 +19,17 @@ USART3|  B10 B11 |   (C10 C11)  | (D8  D9)  |
 #define DEBUG_UARTNUM     USART2 //DEBUG
 #define USARTSCREEN       USART1 //串口屏
 
+#define USART_485_Init
+#define USART_485_R
+#define USART_485_T
+#define USART2_485_Init PA1_OUT
+#define USART2_485_R Clr_A1
+#define USART2_485_T Set_A1
+#define USART3_485_Init
+#define USART3_485_R
+#define USART3_485_T
+
+
 #define EN_USART_    (1)       //Enable(1)/Disable(0)
 #define EN_USART2_   (1)       //Enable(1)/Disable(0)
 #define EN_USART3_   (1)       //Enable(1)/Disable(0)

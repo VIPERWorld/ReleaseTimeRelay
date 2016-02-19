@@ -121,7 +121,36 @@ void EXTI9_5_IRQHandler(void)
 		EXTI_ClearITPendingBit(EXTI_Line9);
 	}
 }
-
+void EXTI15_10_IRQHandler(void)
+{
+	if (EXTI_GetITStatus(EXTI_Line10) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line10);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line11) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line11);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line12) != RESET)
+	{
+		AbsoluteOpticalEncoderInOut1();
+		EXTI_ClearITPendingBit(EXTI_Line12);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line13) != RESET)
+	{
+		AbsoluteOpticalEncoderInOut1();
+		EXTI_ClearITPendingBit(EXTI_Line13);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line14) != RESET)
+	{
+		EXTI_ClearITPendingBit(EXTI_Line14);
+	}
+	else if (EXTI_GetITStatus(EXTI_Line15) != RESET)
+	{
+		AbsoluteOpticalEncoderInOut1();
+		EXTI_ClearITPendingBit(EXTI_Line15);
+	}
+}
 void USART1_IRQHandler(void)  //串口中断函数
 {
 	// ATK_Usart1_IQR();

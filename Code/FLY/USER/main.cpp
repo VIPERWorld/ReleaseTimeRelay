@@ -1,3 +1,6 @@
+/*
+
+//*/
 /***SYS***/
 #include "sys.h"
 #include "gpio.h"
@@ -23,16 +26,20 @@ void SYS_INIT(void)
 {
 	/***延时初始化***/
 	delay_init();
+	delay_ms(100);
 	/***中断初始化***/
 	NVIC_Configuration();
 	uart_init (38400);
-	uart2_init(115200);
+	uart2_init(9600);
 	uart3_init(115200);
 	//PvdInit();
+	USART2_485_T
 	Sys_Printf(USART1, (char *)"USART USARTSCREEN\r\n");
 	Sys_Printf(USART2, (char *)"USART2 DEBUG_UARTNUM\r\n");
 	Sys_Printf(USART3, (char *)"USART3 UARTWIFIUARTNUM\r\n");
-	delay_ms(100);
+	USART2_485_R
+	Sys_Printf(USART2, (char *)"USART2 485 R\r\n");
+
 }
 
 #include "rtc.h"
@@ -154,7 +161,9 @@ u16 task_rtc(void)
 			TimeUnlockFlag = 0;
 		}
 	}
-	_EE
+#pragma diag_remark 111
+    _EE
+#pragma diag_default 111
 }
 
 void RelayControl(void)
@@ -222,9 +231,16 @@ int TaskRelay(void)
 	WaitX(1000);
 
 	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_AFIO, ENABLE ); GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
-	EXTI_Configuration(GPIOB, GPIO_Pin_6, 0);// 表示作为外部中断 0下降沿触发
-	EXTI_Configuration(GPIOB, GPIO_Pin_7, 0);// 表示作为外部中断 0下降沿触发
+	EXTI_Configuration(GPIOB, GPIO_Pin_6, 0);// 表示作为外部中断 0下降沿触发 1上升沿
+	EXTI_Configuration(GPIOB, GPIO_Pin_7, 0);// 表示作为外部中断 0下降沿触发 1上升沿
 	EXTI_Configuration(GPIOB, GPIO_Pin_8, 0);// 表示作为外部中断 0下降沿触发 1上升沿
+	EXTI_Configuration(GPIOB, GPIO_Pin_13, 0);// 表示作为外部中断 0下降沿触发 1上升沿
+	EXTI_Configuration(GPIOB, GPIO_Pin_15, 0);// 表示作为外部中断 0下降沿触发 1上升沿
+	EXTI_Configuration(GPIOA, GPIO_Pin_12, 0);// 表示作为外部中断 0下降沿触发 1上升沿
+	EXTI_NVIC_Configuration(12, 2, 1, 1);//-
+	EXTI_NVIC_Configuration(13, 2, 1, 1);//+
+	EXTI_NVIC_Configuration(15, 2, 1, 1);//0
+
 	EXTI_Configuration(GPIOB, GPIO_Pin_9, 2);// 表示作为外部中断 2上升和下降沿触发
 	EXTI_NVIC_Configuration(6, 2, 1, 1);//-
 	EXTI_NVIC_Configuration(7, 2, 1, 1);//+
@@ -275,7 +291,9 @@ int TaskRelay(void)
 			RelayControlOff();
 		}
 	}
-	_EE
+#pragma diag_remark 111
+    _EE
+#pragma diag_default 111
 }
 
 
@@ -302,7 +320,6 @@ const char *ATCommandList[CONFIGSUMNUM][3] = {
 		//"AT+ATRM=0,0,\"sa315473628.oicp.net\",23478"
 	}
 };
-
 int TaskUsrtWifi(void)
 {
 	_SS
@@ -443,7 +460,9 @@ int TaskUsrtWifi(void)
 			UsrtWifiENTMFlag = 0;
 		}
 	}
-	_EE
+#pragma diag_remark 111
+    _EE
+#pragma diag_default 111
 }
 void DisPlaySendLock(void)//发送指令返回锁定界面
 {
@@ -524,7 +543,9 @@ int TaskControl(void)
 			Data_Send_VAL(0x0001, AbsoluteOpticalEncoder_VAL);
 		}//每隔一秒钟更新数据
 	}
-	_EE
+#pragma diag_remark 111
+    _EE
+#pragma diag_default 111
 }
 #define ONLINE (0)   //在线
 #define NOTONLINE (1)//离线
@@ -558,9 +579,10 @@ int taskKeepAlive(void)
 			Data_Send_VAL(0x0206, NOTONLINE);//发送离线
 		}
 	}
-	_EE
+#pragma diag_remark 111
+    _EE
+#pragma diag_default 111
 }
-
 int Keep(void)
 {
 	_SS
@@ -587,7 +609,9 @@ int Keep(void)
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf6, 1);
 		WaitX(60000);
 	}
-	_EE
+#pragma diag_remark 111
+    _EE
+#pragma diag_default 111
 }
 
 

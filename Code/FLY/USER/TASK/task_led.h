@@ -21,7 +21,9 @@ int task_led(void)
             currenttime=SysTick_Clock();
 						Sys_Printf(DEBUG_UARTNUM, "\r\n%d",currenttime-lasttime);
     }
+#pragma diag_remark 111
     _EE
+#pragma diag_default 111
 }
 
 //int loop_led(void)
