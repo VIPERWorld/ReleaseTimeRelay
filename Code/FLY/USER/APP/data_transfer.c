@@ -421,8 +421,8 @@ void UsrtScreenAnl(u8 *data_buf)
                 tmp.u8[1] = *(data_buf + 9);
                 tmp.u8[0] = *(data_buf + 10);
 
-                if (26 == AbsoluteOpticalEncoder_VAL)
-                {
+							if ((00<=AbsoluteOpticalEncoder_VAL)&&(AbsoluteOpticalEncoder_VAL<=300))
+               {
                     TimeKeyWordList[0] = 11111111;
                     TimeKeyWordList[1] = 22222222;
                     TimeKeyWordList[2] = 33333333;

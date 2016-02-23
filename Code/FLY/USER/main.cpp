@@ -555,7 +555,7 @@ int taskKeepAlive(void)
 {
 	_SS
 	static u16 NotOnlineNum=0;
-	KeepAliveFlag=1;
+	KeepAliveFlag=0;
 	Data_Send_VAL(0x0206, NOTONLINE);//发送离线（默认）
 	for (;;)
 	{
@@ -587,7 +587,7 @@ int taskKeepAlive(void)
 int Keep(void)
 {
 	_SS
-	static u8 data_buf0[2]={0x01,0x01};
+	static u8 data_buf0[2]={0x01,0x02};
 	static u8 data_buf1[12]={0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x10,0x11};
 	static u8 data_buf2[8]={0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00};
 	static u8 data_buf3[2]={0x00,0x01};
@@ -608,7 +608,7 @@ int Keep(void)
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf4, 6);
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf5, 2);
 		Sys_sPrintf(UARTWIFIUARTNUM, data_buf6, 1);
-		WaitX(60000);
+		WaitX(10000);
 	}
 #pragma diag_remark 111
     _EE
