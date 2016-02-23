@@ -327,6 +327,15 @@ void DisPlaySendUnLock(void)//发送指令配置界面
 u8 KeepAliveFlag=1;
 void TcpAnl(u8 *data_buf)
 {
+	char MacAddr[]={0x00,0x01,0x02,0x03,0x04,0x05,0x06,0x07,0x08,0x09,0x10,0x11};
+	for(int i=0;i<12;i++)//对MacAddr进行检测 长度12
+	{
+		if((*(data_buf + 2+i))!=MacAddr[i])
+		{
+			return;
+		}
+	}
+	
     RTC_Set(
         HEX2DEC(*(data_buf + 24)) * 100 + HEX2DEC(*(data_buf + 25)),
         HEX2DEC(*(data_buf + 26)),
