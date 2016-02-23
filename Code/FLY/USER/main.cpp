@@ -1,6 +1,6 @@
 /*
 
-//*/
+*/
 /***SYS***/
 #include "sys.h"
 #include "gpio.h"
@@ -224,12 +224,8 @@ int TaskRelay(void)
 //	RELAY9_INIT; RELAY9_OFF;
 	RELAY10_INIT; RELAY10_OFF;
 
-
-
-
-
 	WaitX(1000);
-
+	
 	RCC_APB2PeriphClockCmd(	RCC_APB2Periph_AFIO, ENABLE ); GPIO_PinRemapConfig(GPIO_Remap_SWJ_JTAGDisable, ENABLE);
 	EXTI_Configuration(GPIOB, GPIO_Pin_6, 0);// 表示作为外部中断 0下降沿触发 1上升沿
 	EXTI_Configuration(GPIOB, GPIO_Pin_7, 0);// 表示作为外部中断 0下降沿触发 1上升沿
@@ -241,7 +237,11 @@ int TaskRelay(void)
 	EXTI_NVIC_Configuration(13, 2, 1, 1);//+
 	EXTI_NVIC_Configuration(15, 2, 1, 1);//0
 
+	//***光电***//
+	PA5_In
+	Clr_A5;
 	EXTI_Configuration(GPIOB, GPIO_Pin_9, 2);// 表示作为外部中断 2上升和下降沿触发
+	//***光电***//
 	EXTI_NVIC_Configuration(6, 2, 1, 1);//-
 	EXTI_NVIC_Configuration(7, 2, 1, 1);//+
 	EXTI_NVIC_Configuration(8, 2, 1, 1);//0
@@ -555,6 +555,7 @@ int taskKeepAlive(void)
 {
 	_SS
 	static u16 NotOnlineNum=0;
+	KeepAliveFlag=1;
 	Data_Send_VAL(0x0206, NOTONLINE);//发送离线（默认）
 	for (;;)
 	{

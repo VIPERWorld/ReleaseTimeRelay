@@ -104,7 +104,7 @@ extern void TimeUnZip(u32 tmp);
 #define RELAY10_ON  Clr_B14
 #define RELAY10_INIT   PB14_OUT
 
-#define GUANG_DIAN B9
+#define GUANG_DIAN (B9||A5)
 
 
 #endif

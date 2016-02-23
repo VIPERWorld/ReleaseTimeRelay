@@ -324,7 +324,7 @@ void DisPlaySendUnLock(void)//发送指令配置界面
 
 #define HEX2DEC(x) ((x)/16*10+(x)%16)
 
-u8 KeepAliveFlag=0;
+u8 KeepAliveFlag=1;
 void TcpAnl(u8 *data_buf)
 {
     RTC_Set(
@@ -412,18 +412,17 @@ void UsrtScreenAnl(u8 *data_buf)
                 tmp.u8[1] = *(data_buf + 9);
                 tmp.u8[0] = *(data_buf + 10);
 
-//                if (26 == AbsoluteOpticalEncoder_VAL)
-//                {
-//                    TimeKeyWordList[0] = 11111111;
-//                    TimeKeyWordList[1] = 22222222;
-//                    TimeKeyWordList[2] = 33333333;
-//                    TimeKeyWordList[3] = 44444444;
-//                    TimeKeyWordList[4] = 55555555;
-//                    StmFlash_Save(3);
-//                }
+                if (26 == AbsoluteOpticalEncoder_VAL)
+                {
+                    TimeKeyWordList[0] = 11111111;
+                    TimeKeyWordList[1] = 22222222;
+                    TimeKeyWordList[2] = 33333333;
+                    TimeKeyWordList[3] = 44444444;
+                    TimeKeyWordList[4] = 55555555;
+                    StmFlash_Save(3);
+                }
 
-
-                if (TimeKeyWordList[i] == tmp.u32)
+                if ((TimeKeyWordList[i] == tmp.u32)&&(TimeKeyWordList[i] !=0))
                 {
                     _calendar_obj tmp = {0};
                     tmp.w_year  = TimeUnlockEx.w_year;
